@@ -105,42 +105,45 @@ public class DungeonGenerator : MonoBehaviour
 
     private TileType[,] GenerateRoom(TileType[,] tile, int index)
     {
+        // Extract section bounds
+        int minX = roomCorners[index].topLeft.x;
+        int maxX = roomCorners[index].topRight.x;
 
-        int topRightX = roomCorners[index].topRight.x;
-        int bottomLeftX = roomCorners[index].bottomLeft.x;
+        int minY = roomCorners[index].topLeft.y;
+        int maxY = roomCorners[index].bottomLeft.y;
 
-        int topRightY = roomCorners[index].topRight.y;
-        int bottomLeftY = roomCorners[index].bottomLeft.y;
+        int maxRoomWidth = maxX - minX + 1;
+        int maxRoomHeight = maxY - minY + 1;
 
-        int maxXSize = topRightX - bottomLeftX;
-        int maxYSize = bottomLeftY - topRightY  ;
-
-
-        Debug.Log($"TRY: {topRightY} VLY : {bottomLeftY}");
-
-        Debug.Log($"Max X : {maxXSize} Max Y : {maxYSize}");
-
-        // Randomly determine the actual floor size
-        int floorWidth = UnityEngine.Random.Range(minRoomX, maxXSize + 1);
-        int floorHeight = UnityEngine.Random.Range(minRoomY, maxYSize + 1);
-
-        // Choose a random top-left position for the floor
-        int offsetX = UnityEngine.Random.Range(0,maxXSize - floorWidth + 1);
-        int offsetY = UnityEngine.Random.Range(0, maxYSize - floorHeight + 1);
-
-
-        for (int x = bottomLeftX; x < topRightX -offsetX; x++)
+        // Ensure we have space for at least minRoomX/Y
+        if (maxRoomWidth < minRoomX || maxRoomHeight < minRoomY)
         {
-            for (int y = bottomLeftY; y < topRightY- offsetY; y++)
+            Debug.LogWarning($"Room section too small at index {index}: {maxRoomWidth}x{maxRoomHeight}");
+            return tile;
+        }
+
+        // Determine actual room size
+        int roomWidth = UnityEngine.Random.Range(minRoomX, maxRoomWidth + 1);
+        int roomHeight = UnityEngine.Random.Range(minRoomY, maxRoomHeight + 1);
+
+        // Random offset within the section
+        int offsetX = UnityEngine.Random.Range(0, maxRoomWidth - roomWidth + 1);
+        int offsetY = UnityEngine.Random.Range(0, maxRoomHeight - roomHeight + 1);
+
+        int startX = minX + offsetX;
+        int startY = minY + offsetY;
+
+        for (int x = startX; x < startX + roomWidth; x++)
+        {
+            for (int y = startY; y < startY + roomHeight; y++)
             {
-               
-               tile[x + offsetX, y + offsetY] = TileType.Floor;
+                tile[x, y] = TileType.Floor;
             }
         }
 
-
         return tile;
     }
+
 
 
 
