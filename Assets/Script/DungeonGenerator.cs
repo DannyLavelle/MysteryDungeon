@@ -5,7 +5,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class DungeonGenerator : MonoBehaviour
 {
-
+    private GameObject dungeonContainer;
     public GameObject floor;
     public GameObject wall;
     public int dungeonSizeX = 52;
@@ -14,9 +14,11 @@ public class DungeonGenerator : MonoBehaviour
     public int roomNumY = 2;
     public int minRoomX = 5;
     public int minRoomY = 4;
+    [SerializeField] private int roomPadding = 1;       
+    [SerializeField] private int dungeonBorder = 1;     
 
     private int GenType;
-
+    public bool genTest;
 
     private List<((int x, int y) topLeft, (int x, int y) topRight, (int x, int y) bottomLeft, (int x, int y) bottomRight, (int x, int y) centre)> roomCorners;
         
@@ -28,50 +30,51 @@ public class DungeonGenerator : MonoBehaviour
 
     private void Start()
     {
+
         roomCorners = new List<((int x, int y) topLeft, (int x, int y) topRight, (int x, int y) bottomLeft, (int x, int y) bottomRight, (int x, int y) centre)>();
         GenerateDungeon();
     }
 
+
+    public void Update()
+    {
+        if(genTest)
+        {
+            float tempTime = Time.time;
+            GenerateDungeon();
+            genTest = false;
+
+            Debug.Log($"time taken to gen {(Time.time - tempTime)*1000} ms");
+        }
+    }
     public void GenerateDungeon()
     {
-        TileType[,] dungeon = new TileType[dungeonSizeX,dungeonSizeY];
+        if (dungeonContainer != null)
+            Destroy(dungeonContainer);
+
+        dungeonContainer = new GameObject("DungeonContainer");
+        dungeonContainer.transform.parent = this.transform;
+
+        roomCorners.Clear();
+        TileType[,] dungeon = new TileType[dungeonSizeX, dungeonSizeY];
 
         dungeon = ResetDungeon(dungeon);
 
-
-
-        int roomsX = dungeonSizeX / roomNumX;
-        int roomsY = dungeonSizeY / roomNumY;
-
-        roomCorners = SplitDungeon(dungeon,roomNumX,roomNumY);
-
-        //foreach(var room in roomCorners)
-        //{
-        //    Debug.Log(room);
-        //}
+        roomCorners = SplitDungeon(dungeon, roomNumX, roomNumY);
 
         for (int i = 0; i < roomCorners.Count; i++)
-
         {
-
-            //dungeon[roomCorners[i].topLeft.x, roomCorners[i].topLeft.y] = TileType.Floor;
-            //dungeon[roomCorners[i].topRight.x, roomCorners[i].topRight.y] = TileType.Floor;
-            //dungeon[roomCorners[i].bottomLeft.x, roomCorners[i].bottomLeft.y] = TileType.Floor;
-            //dungeon[roomCorners[i].bottomRight.x, roomCorners[i].bottomRight.y] = TileType.Floor;
-            //dungeon[roomCorners[i].centre.x, roomCorners[i].centre.y] = TileType.Floor;
-
             dungeon = GenerateRoom(dungeon, i);
         }
 
         SpawnDungeon(dungeon);
-
     }
 
     private List<((int x, int y) topLeft, (int x, int y) topRight, (int x, int y) bottomLeft, (int x, int y) bottomRight, (int x, int y) center)>
     SplitDungeon(TileType[,] grid, int partsX, int partsY)
     {
-        int totalWidth = grid.GetLength(0);   // X-axis
-        int totalHeight = grid.GetLength(1);  // Y-axis
+        int totalWidth = grid.GetLength(0) - 2 * dungeonBorder;
+        int totalHeight = grid.GetLength(1) - 2 * dungeonBorder;
 
         int partWidth = totalWidth / partsX;
         int partHeight = totalHeight / partsY;
@@ -82,8 +85,10 @@ public class DungeonGenerator : MonoBehaviour
         {
             for (int px = 0; px < partsX; px++)
             {
-                int startX = px * partWidth;
-                int startY = py * partHeight;
+
+
+                int startX = px * partWidth + dungeonBorder;
+                int startY = py * partHeight + dungeonBorder;
 
                 int endX = startX + partWidth - 1;
                 int endY = startY + partHeight - 1;
@@ -105,33 +110,34 @@ public class DungeonGenerator : MonoBehaviour
 
     private TileType[,] GenerateRoom(TileType[,] tile, int index)
     {
-        // Extract section bounds
-        int minX = roomCorners[index].topLeft.x;
-        int maxX = roomCorners[index].topRight.x;
+        // Shrink the usable area by 1 on each side (padding)
+        int sectionMinX = roomCorners[index].topLeft.x + roomPadding;
+        int sectionMaxX = roomCorners[index].topRight.x - roomPadding;
 
-        int minY = roomCorners[index].topLeft.y;
-        int maxY = roomCorners[index].bottomLeft.y;
+        int sectionMinY = roomCorners[index].topLeft.y + roomPadding;
+        int sectionMaxY = roomCorners[index].bottomLeft.y - roomPadding;
 
-        int maxRoomWidth = maxX - minX + 1;
-        int maxRoomHeight = maxY - minY + 1;
 
-        // Ensure we have space for at least minRoomX/Y
-        if (maxRoomWidth < minRoomX || maxRoomHeight < minRoomY)
+        int usableWidth = sectionMaxX - sectionMinX + 1;
+        int usableHeight = sectionMaxY - sectionMinY + 1;
+
+        // Ensure there's enough room to fit the minimum room + wall padding
+        if (usableWidth < minRoomX || usableHeight < minRoomY)
         {
-            Debug.LogWarning($"Room section too small at index {index}: {maxRoomWidth}x{maxRoomHeight}");
+            Debug.LogWarning($"Section too small for room at index {index}: {usableWidth}x{usableHeight}");
             return tile;
         }
 
-        // Determine actual room size
-        int roomWidth = UnityEngine.Random.Range(minRoomX, maxRoomWidth + 1);
-        int roomHeight = UnityEngine.Random.Range(minRoomY, maxRoomHeight + 1);
+        // Choose random room size within usable space
+        int roomWidth = UnityEngine.Random.Range(minRoomX, usableWidth + 1);
+        int roomHeight = UnityEngine.Random.Range(minRoomY, usableHeight + 1);
 
-        // Random offset within the section
-        int offsetX = UnityEngine.Random.Range(0, maxRoomWidth - roomWidth + 1);
-        int offsetY = UnityEngine.Random.Range(0, maxRoomHeight - roomHeight + 1);
+        // Random offset within the usable area (to pad on all sides)
+        int offsetX = UnityEngine.Random.Range(0, usableWidth - roomWidth + 1);
+        int offsetY = UnityEngine.Random.Range(0, usableHeight - roomHeight + 1);
 
-        int startX = minX + offsetX;
-        int startY = minY + offsetY;
+        int startX = sectionMinX + offsetX;
+        int startY = sectionMinY + offsetY;
 
         for (int x = startX; x < startX + roomWidth; x++)
         {
@@ -143,6 +149,7 @@ public class DungeonGenerator : MonoBehaviour
 
         return tile;
     }
+
 
 
 
@@ -173,23 +180,18 @@ public class DungeonGenerator : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                Vector3 position = new Vector3(x, 0, y); // 3D space, Y is height (change to 2D if needed)
+                Vector3 position = new Vector3(x, 0, y);
 
-                GameObject prefabToSpawn = null;
-
-                switch (grid[x, y])
+                GameObject prefabToSpawn = grid[x, y] switch
                 {
-                    case TileType.Floor:
-                    prefabToSpawn = floor;
-                    break;
-                    case TileType.Wall:
-                    prefabToSpawn = wall;
-                    break;
-                }
+                    TileType.Floor => floor,
+                    TileType.Wall => wall,
+                    _ => null
+                };
 
                 if (prefabToSpawn != null)
                 {
-                    Instantiate(prefabToSpawn, position, Quaternion.identity, this.transform);
+                    Instantiate(prefabToSpawn, position, Quaternion.identity, dungeonContainer.transform);
                 }
             }
         }
