@@ -19,13 +19,15 @@ public class DungeonGenerator : MonoBehaviour
     private int[] origninalRoomNum ;
     private int[] originalDungeonSize ;
     [SerializeField] private int roomPadding = 1;       
-    [SerializeField] private int dungeonBorder = 1;     
+    [SerializeField] private int dungeonBorder = 1;
+
+    [Range(0, 1)] public float straightCorridoorChance;
 
     private int GenType;
     public bool genTest;
     private float roomChance = 0.7f;
     private List<((int x, int y) topLeft, (int x, int y) topRight, (int x, int y) bottomLeft, (int x, int y) bottomRight, (int x, int y) centre)> roomCorners;
-    private List<int> addedCentres = new List<int>();  
+    private List<(int x, int y)> addedCentres = new List<(int x, int y)>();  
 
     public enum DungeonType
     {
@@ -86,8 +88,9 @@ public class DungeonGenerator : MonoBehaviour
         for (int i = 0; i < roomCorners.Count; i++)
         {
 
-            float rand = UnityEngine.Random.Range(0, 1);
+            float rand = UnityEngine.Random.value;
 
+            Debug.LogFormat($"Rand = {rand}, chance = {roomChance}");
             if(rand  <= roomChance)
             {
                 dungeon = GenerateRoom(dungeon, i);
@@ -96,6 +99,8 @@ public class DungeonGenerator : MonoBehaviour
             }
             
         }
+
+        dungeon = ConnectRooms(dungeon);
 
         SpawnDungeon(dungeon);
     }
@@ -177,6 +182,10 @@ public class DungeonGenerator : MonoBehaviour
             }
         }
 
+        int centreX = startX+roomWidth/2;
+        int centreY = startY+roomHeight/2;
+        addedCentres.Add((centreX, centreY));
+
         return tile;
     }
 
@@ -240,6 +249,7 @@ public class DungeonGenerator : MonoBehaviour
             minRoomY = Convert.ToInt32(Math.Ceiling(.9 * originalDungeonSize[1]));
             roomNumX = 1;
             roomNumY = 1;
+            roomChance = 1.1f;
 
         }
         else
@@ -286,4 +296,79 @@ public class DungeonGenerator : MonoBehaviour
 
 
     }
+
+
+    public TileType[,] ConnectRooms(TileType[,] tileType)
+    {
+        int numberOfRooms = addedCentres.Count;
+        if (numberOfRooms < 2)
+            return tileType;
+
+        for (int i = 0; i < numberOfRooms; i++)
+        {
+            (int x, int y) start = addedCentres[i];
+            (int x, int y) end = addedCentres[(i + 1) % numberOfRooms]; // loop to first at the end
+
+            int currentX = start.x;
+            int currentY = start.y;
+
+            // Randomize first direction
+            bool preferX = UnityEngine.Random.value < 0.5f;
+            string lastDirection = preferX ? "x" : "y";
+
+            while (currentX != end.x || currentY != end.y)
+            {
+                bool stepX = false;
+
+                if (currentX != end.x && currentY != end.y)
+                {
+                    if (UnityEngine.Random.value < straightCorridoorChance)
+                    {
+                        stepX = lastDirection == "x";
+                    }
+                    else
+                    {
+                        stepX = UnityEngine.Random.value < 0.5f;
+                    }
+                }
+                else if (currentX != end.x)
+                {
+                    stepX = true;
+                }
+                else if (currentY != end.y)
+                {
+                    stepX = false;
+                }
+
+                if (stepX)
+                {
+                    currentX += Math.Sign(end.x - currentX);
+                    lastDirection = "x";
+                }
+                else
+                {
+                    currentY += Math.Sign(end.y - currentY);
+                    lastDirection = "y";
+                }
+
+                // Mark the tile as floor
+                if (currentX >= 0 && currentX < dungeonSizeX && currentY >= 0 && currentY < dungeonSizeY)
+                {
+
+
+                    // Ensure not out of bounds
+                    // The dungeon map should be stored to be modified here
+                    // You can make dungeon a class member if needed
+                    // Example:
+                   tileType[currentX, currentY] = TileType.Floor;
+
+                }
+            }
+        }
+
+        return tileType;
+    }
+
+
+
 }

@@ -410,10 +410,14 @@ MonoBehaviour:
   wall: {fileID: 7390352004797279440, guid: 0f31a5647570d7c40b22b5890f4589d9, type: 3}
   dungeonSizeX: 52
   dungeonSizeY: 28
-  roomNumX: 6
+  roomNumX: 3
   roomNumY: 2
   minRoomX: 5
   minRoomY: 4
+  roomPadding: 1
+  dungeonBorder: 1
+  straightCorridoorChance: 0.7
+  genTest: 0
 --- !u!4 &481434384
 Transform:
   m_ObjectHideFlags: 0
