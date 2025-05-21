@@ -14,14 +14,26 @@ public class DungeonGenerator : MonoBehaviour
     public int roomNumY = 2;
     public int minRoomX = 5;
     public int minRoomY = 4;
+
+    private int[] origninalMin ;
+    private int[] origninalRoomNum ;
+    private int[] originalDungeonSize ;
     [SerializeField] private int roomPadding = 1;       
     [SerializeField] private int dungeonBorder = 1;     
 
     private int GenType;
     public bool genTest;
-
+    private float roomChance = 0.7f;
     private List<((int x, int y) topLeft, (int x, int y) topRight, (int x, int y) bottomLeft, (int x, int y) bottomRight, (int x, int y) centre)> roomCorners;
-        
+    private List<int> addedCentres = new List<int>();  
+
+    public enum DungeonType
+    {
+        SingleRoom,
+        fullRoom,
+        halfRoom,
+        threeQuartRoom,
+    }
     public enum TileType
     {
         Wall,
@@ -30,7 +42,9 @@ public class DungeonGenerator : MonoBehaviour
 
     private void Start()
     {
-
+        origninalMin = new int[2] { minRoomX,minRoomY};
+        origninalRoomNum = new int[2] {roomNumX,roomNumY};
+        originalDungeonSize = new int[4] {dungeonSizeX,dungeonSizeY, dungeonSizeX, dungeonSizeY };
         roomCorners = new List<((int x, int y) topLeft, (int x, int y) topRight, (int x, int y) bottomLeft, (int x, int y) bottomRight, (int x, int y) centre)>();
         GenerateDungeon();
     }
@@ -44,27 +58,43 @@ public class DungeonGenerator : MonoBehaviour
             GenerateDungeon();
             genTest = false;
 
-            Debug.Log($"time taken to gen {(Time.time - tempTime)*1000} ms");
+            //Debug.Log($"time taken to gen {(Time.time - tempTime)*1000} ms");
         }
     }
     public void GenerateDungeon()
     {
+        addedCentres.Clear();
+        DecideDungeonType();
+
+
+
+
+
         if (dungeonContainer != null)
-            Destroy(dungeonContainer);
+            Destroy(dungeonContainer);//destroy the previous dungeon generated
 
         dungeonContainer = new GameObject("DungeonContainer");
         dungeonContainer.transform.parent = this.transform;
-
+        AdjustDungeonSize(originalDungeonSize[0],originalDungeonSize[1]);
         roomCorners.Clear();
         TileType[,] dungeon = new TileType[dungeonSizeX, dungeonSizeY];
 
-        dungeon = ResetDungeon(dungeon);
+        dungeon = ResetDungeon(dungeon);//fills dungeon with wall blocks 
 
-        roomCorners = SplitDungeon(dungeon, roomNumX, roomNumY);
+        roomCorners = SplitDungeon(dungeon, roomNumX, roomNumY);//splits dungeon into sections 
 
         for (int i = 0; i < roomCorners.Count; i++)
         {
-            dungeon = GenerateRoom(dungeon, i);
+
+            float rand = UnityEngine.Random.Range(0, 1);
+
+            if(rand  <= roomChance)
+            {
+                dungeon = GenerateRoom(dungeon, i);
+
+                //TODO Log centres
+            }
+            
         }
 
         SpawnDungeon(dungeon);
@@ -197,5 +227,63 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
+    private void DecideDungeonType()
+    {
+        DungeonType dungeonType;
 
+        dungeonType = RandomEnumValue<DungeonType>();
+        if (dungeonType == DungeonType.SingleRoom)//Sets room size and room numbers so single room can be 1 large room
+        {            
+
+
+            minRoomX = Convert.ToInt32(Math.Ceiling(.9 * originalDungeonSize[0]));
+            minRoomY = Convert.ToInt32(Math.Ceiling(.9 * originalDungeonSize[1]));
+            roomNumX = 1;
+            roomNumY = 1;
+
+        }
+        else
+        {
+            minRoomX = origninalMin[0];
+            minRoomY = origninalMin[1];
+            roomNumX = origninalRoomNum[0];
+            roomNumY = origninalRoomNum[1];
+        }
+
+        switch(dungeonType)//set probablility to spawn room based on 
+        {
+            case DungeonType.threeQuartRoom:
+            roomChance = .75f;
+            break;
+            case DungeonType.fullRoom:
+            roomChance = 1f;
+            break;
+            case DungeonType.halfRoom:
+            roomChance = .5f;
+            break;
+        }
+        Debug.Log("Dungeon Type : " + dungeonType);
+
+    }
+
+
+    static T RandomEnumValue<T>()
+    {
+        var v = Enum.GetValues(typeof(T));
+        return (T)v.GetValue(UnityEngine.Random.Range(0,v.Length));
+    }
+
+
+    private void AdjustDungeonSize(int originalX,int originalY)//changes dungeon size based on padding and border 
+    {
+        originalDungeonSize[2] = originalX;
+        originalDungeonSize[3] = originalY;
+
+        dungeonSizeX = originalDungeonSize[2] + (dungeonBorder * 2) + (roomPadding * 2 * roomNumX);
+        dungeonSizeY = originalDungeonSize[3] + (dungeonBorder * 2) + (roomPadding * 2 * roomNumY);
+
+
+
+
+    }
 }
