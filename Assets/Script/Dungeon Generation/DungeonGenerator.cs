@@ -22,7 +22,12 @@ public class DungeonGenerator : MonoBehaviour
     private float roomChance = 0.7f;
     private List<RoomBounds> roomBoundsList;
     private List<Vector2Int> roomCenters = new();
+    public List<Vector2Int> roomFloorTiles = new List<Vector2Int>();
+    public List<Vector2Int> corridorFloorTiles = new List<Vector2Int>();
     private DungeonSettings defaultSettings;
+    public TileType[,] dungeonGrid;
+
+
 
     private void Start()
     {
@@ -57,7 +62,7 @@ public class DungeonGenerator : MonoBehaviour
         dungeonSizeX = dungeonSize.x;
         dungeonSizeY = dungeonSize.y;
 
-        TileType[,] dungeonGrid = new TileType[dungeonSizeX, dungeonSizeY];
+         dungeonGrid = new TileType[dungeonSizeX, dungeonSizeY];
         DungeonUtility.FillWithWalls(dungeonGrid);
 
         DecideDungeonType();
