@@ -13,7 +13,7 @@ public class DungeonRoomGenerator
         this.padding = padding;
     }
 
-    public TileType[,] GenerateRoom(TileType[,] grid, RoomBounds bounds, List<Vector2Int> centers)
+    public TileType[,] GenerateRoom(TileType[,] grid, RoomBounds bounds, List<Vector2Int> centers,DungeonContainer dungeon)
     {
         int minX = bounds.topLeft.x + padding;
         int maxX = bounds.topRight.x - padding;
@@ -36,7 +36,12 @@ public class DungeonRoomGenerator
 
         for (int x = startX; x < startX + width; x++)
             for (int y = startY; y < startY + height; y++)
+            {
                 grid[x, y] = TileType.Floor;
+                dungeon.floorTiles.Add((x, y));
+            }
+
+                
 
         centers.Add(new(startX + width / 2, startY + height / 2));
         return grid;

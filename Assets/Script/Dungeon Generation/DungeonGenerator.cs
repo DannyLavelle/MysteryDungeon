@@ -17,13 +17,12 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] private int dungeonBorder = 1;
     [Range(0, 1)] public float straightCorridorChance = 0.5f;
     public bool regenerateOnFlag;
-
+    DungeonContainer dungeonGridContainer; 
     private GameObject dungeonContainer;
     private float roomChance = 0.7f;
     private List<RoomBounds> roomBoundsList;
     private List<Vector2Int> roomCenters = new();
-    public List<Vector2Int> roomFloorTiles = new List<Vector2Int>();
-    public List<Vector2Int> corridorFloorTiles = new List<Vector2Int>();
+
     private DungeonSettings defaultSettings;
     public TileType[,] dungeonGrid;
 
@@ -31,6 +30,7 @@ public class DungeonGenerator : MonoBehaviour
 
     private void Start()
     {
+        dungeonGridContainer = GetComponent<DungeonContainer>();
         defaultSettings = new DungeonSettings(minRoomX, minRoomY, roomNumX, roomNumY, dungeonSizeX, dungeonSizeY);
         GenerateDungeon();
     }
@@ -62,7 +62,7 @@ public class DungeonGenerator : MonoBehaviour
         dungeonSizeX = dungeonSize.x;
         dungeonSizeY = dungeonSize.y;
 
-         dungeonGrid = new TileType[dungeonSizeX, dungeonSizeY];
+        dungeonGrid = dungeonGridContainer.CreateDungeonGrid(dungeonSizeX, dungeonSizeY);
         DungeonUtility.FillWithWalls(dungeonGrid);
 
         DecideDungeonType();
@@ -77,13 +77,16 @@ public class DungeonGenerator : MonoBehaviour
         {
             if (Random.value <= roomChance)
             {
-                dungeonGrid = roomGen.GenerateRoom(dungeonGrid, room, roomCenters);
+                dungeonGrid = roomGen.GenerateRoom(dungeonGrid, room, roomCenters,dungeonGridContainer);
             }
         }
 
         // Connect rooms
         var connector = new DungeonConnector(straightCorridorChance, dungeonSizeX, dungeonSizeY);
-        dungeonGrid = connector.ConnectRooms(dungeonGrid, roomCenters);
+        dungeonGrid = connector.ConnectRooms(dungeonGrid, roomCenters,dungeonGridContainer);
+
+
+        dungeonGridContainer.dungeon = dungeonGrid;
 
         // Spawn
         DungeonUtility.SpawnTiles(dungeonGrid, floor, wall, dungeonContainer.transform);

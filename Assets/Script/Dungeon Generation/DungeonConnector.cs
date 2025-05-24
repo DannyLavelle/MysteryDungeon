@@ -14,7 +14,7 @@ public class DungeonConnector
         this.height = height;
     }
 
-    public TileType[,] ConnectRooms(TileType[,] grid, List<Vector2Int> centers)
+    public TileType[,] ConnectRooms(TileType[,] grid, List<Vector2Int> centers,DungeonContainer dungeon)
     {
         if (centers.Count < 2) return grid;
 
@@ -42,8 +42,18 @@ public class DungeonConnector
                     last = "y";
                 }
 
-                if (x >= 0 && x < width && y >= 0 && y < height)
-                    grid[x, y] = TileType.Floor;
+                if (x >= 0 && x < width && y >= 0 && y < height  )
+                {
+                    var pos = (x, y);
+                    if (!dungeon.floorTiles.Contains(pos))
+                    {
+                        grid[x, y] = TileType.Floor;
+                        dungeon.corridoorTiles.Add(pos);
+                       
+                    }
+
+                }
+                    
             }
         }
 
