@@ -45,12 +45,15 @@ public class DungeonConnector
                 if (x >= 0 && x < width && y >= 0 && y < height  )
                 {
                     var pos = (x, y);
-                    if (!dungeon.floorTiles.Contains(pos))
+
+
+                    if (grid[x, y] == TileType.Wall || !dungeon.floorTiles.Contains(pos))
                     {
                         grid[x, y] = TileType.Floor;
                         dungeon.corridoorTiles.Add(pos);
-                       
                     }
+
+
 
                 }
                     

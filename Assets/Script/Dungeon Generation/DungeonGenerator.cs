@@ -89,7 +89,8 @@ public class DungeonGenerator : MonoBehaviour
         dungeonGridContainer.dungeon = dungeonGrid;
 
         // Spawn
-        DungeonUtility.SpawnTiles(dungeonGrid, floor, wall, dungeonContainer.transform);
+        DungeonUtility.SpawnTiles(dungeonGrid, floor, wall, dungeonContainer.transform,dungeonGridContainer);
+        
     }
 
     private void DecideDungeonType()
@@ -117,7 +118,7 @@ public class DungeonGenerator : MonoBehaviour
             break;
         }
 
-        Debug.Log($"Dungeon Type: {type}");
+        //Debug.Log($"Dungeon Type: {type}");
     }
 
     private void ResetToDefaultSettings()

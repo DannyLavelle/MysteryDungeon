@@ -13,7 +13,7 @@ public static class DungeonUtility
                 grid[x, y] = TileType.Wall;
     }
 
-    public static void SpawnTiles(TileType[,] grid, GameObject floor, GameObject wall, Transform parent)
+    public static void SpawnTiles(TileType[,] grid, GameObject floor, GameObject wall, Transform parent,DungeonContainer dungeon)
     {
         int width = grid.GetLength(0);
         int height = grid.GetLength(1);
@@ -29,7 +29,12 @@ public static class DungeonUtility
                 };
 
                 if (prefab != null)
-                    Object.Instantiate(prefab, new Vector3(x, 0, y), Quaternion.identity, parent);
+                {
+                    
+                    dungeon.dungeonObjects[x,y] = Object.Instantiate(prefab, new Vector3(x, 0, y), Quaternion.identity, parent); ;
+                }
+                    
+               
             }
     }
 
