@@ -102,6 +102,15 @@ public class DungeonGenerator : MonoBehaviour
         GameObject playerSpawn = dungeonGridContainer.dungeonObjects[spawnPosX,spawnPosY];
         player.transform.position = playerSpawn.transform.position;
 
+
+        var playerController = player.GetComponent<PlayerController>();
+        if (playerController != null)
+        {
+            playerController.GridPosition = new Vector2Int(spawnPosX, spawnPosY);
+            playerController.dungeonGridContainer = dungeonGridContainer; // Optional, if needed
+        }
+
+
         ///
         ///
     }

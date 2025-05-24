@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public Vector2Int GridPosition { get; private set; }
+    public Vector2Int GridPosition;
     public DungeonContainer dungeonGridContainer;
 
+
+    private void Start()
+    {
+        dungeonGridContainer = FindAnyObjectByType<DungeonContainer>();
+    }
     public IEnumerator StepTo(Vector2Int target)
     {
         GridPosition = target;

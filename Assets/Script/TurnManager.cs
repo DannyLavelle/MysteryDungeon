@@ -7,28 +7,6 @@ public abstract class GameAction
     public abstract IEnumerator Execute();
 }
 
-public class MoveAction : GameAction
-{
-    private PlayerController player;
-    private Vector2Int destination;
-
-    public MoveAction(PlayerController player, Vector2Int dest)
-    {
-        this.player = player;
-        destination = dest;
-    }
-
-    public override IEnumerator Execute()
-    {
-        var path = PathfindingUtility.GetPath(player.GridPosition, destination);
-        foreach (var step in path)
-        {
-            // Move one tile, then let enemies take their step
-            yield return player.StepTo(step);
-            yield return TurnManager.Instance.EnemyTurn();
-        }
-    }
-}
 
 public class TurnManager : MonoBehaviour
 {
