@@ -6,6 +6,7 @@ public class DungeonGenerator : MonoBehaviour
     [Header("Prefabs & Settings")]
     public GameObject floor;
     public GameObject wall;
+    public GameObject player;
     public int dungeonSizeX = 52;
     public int dungeonSizeY = 28;
     public int roomNumX = 3;
@@ -90,7 +91,19 @@ public class DungeonGenerator : MonoBehaviour
 
         // Spawn
         DungeonUtility.SpawnTiles(dungeonGrid, floor, wall, dungeonContainer.transform,dungeonGridContainer);
-        
+
+
+
+        ///Test Code
+        ///
+        int rand = Random.Range(0, dungeonGridContainer.floorTiles.Count);
+        int spawnPosX = dungeonGridContainer.floorTiles[rand].x;
+        int spawnPosY = dungeonGridContainer.floorTiles[rand].y;
+        GameObject playerSpawn = dungeonGridContainer.dungeonObjects[spawnPosX,spawnPosY];
+        player.transform.position = playerSpawn.transform.position;
+
+        ///
+        ///
     }
 
     private void DecideDungeonType()
