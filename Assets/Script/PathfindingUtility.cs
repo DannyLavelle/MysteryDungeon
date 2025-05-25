@@ -4,7 +4,7 @@ using System;
 
 public static class PathfindingUtility
 {
-    // simple straight?line stepping: diagonal allowed
+    
     public static List<Vector2Int> GetPath(Vector2Int from, Vector2Int to)
     {
         var path = new List<Vector2Int>();
@@ -18,5 +18,14 @@ public static class PathfindingUtility
             path.Add(new Vector2Int(x, y));
         }
         return path;
+    }
+
+    public static int GetPathLength(Vector2Int start, Vector2Int end)
+    {
+        var path = GetPath(start, end);
+        if (path == null || path.Count == 0)
+            return int.MaxValue; // unreachable
+
+        return path.Count;
     }
 }
