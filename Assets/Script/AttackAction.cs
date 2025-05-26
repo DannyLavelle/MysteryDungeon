@@ -30,7 +30,8 @@ public class AttackAction : GameAction
             Debug.Log("No enemy to attack at " + targetTile);
         }
 
-        yield return new WaitForSeconds(0.1f);
+        yield return TurnManager.Instance.EnemyTurn();
+
     }
 
     private Enemy GetEnemyAtPosition(Vector2Int pos)
