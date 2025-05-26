@@ -5,7 +5,7 @@ public class AttackAction : GameAction
 {
     private PlayerController player;
     private Vector2Int targetTile;
-
+    float damageMultiplier = 1;
     public AttackAction(PlayerController player, Vector2Int targetTile)
     {
         this.player = player;
@@ -19,9 +19,11 @@ public class AttackAction : GameAction
         {
             Debug.Log("Attacking enemy at " + targetTile);
             Stats stats = enemy.GetComponent<Stats>();
+            Stats playerStats = player.GetComponent<Stats>();
             if (stats != null)
             {
-                stats.currentHealth -= 5; // Replace with real damage logic
+                //playerStats.damage
+                stats.TakeDamage(1); // Replace with real damage logic
                 Debug.Log("Enemy HP: " + stats.currentHealth);
             }
         }

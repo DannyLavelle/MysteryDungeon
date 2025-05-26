@@ -5,7 +5,7 @@ public class PlayerInput : MonoBehaviour
 {
     private Camera cam;
     private PlayerController player;
-
+    public LayerMask floorLayerMask;
     private void Start()
     {
 
@@ -26,7 +26,7 @@ public class PlayerInput : MonoBehaviour
     private void CharacterMove(Vector2 mousePos)
     {
         Ray ray = cam.ScreenPointToRay(mousePos);
-        if (Physics.Raycast(ray, out var hit) && hit.collider.CompareTag("Floor"))
+        if (Physics.Raycast(ray, out var hit, Mathf.Infinity, floorLayerMask))
         {
 
            
@@ -51,7 +51,7 @@ public class PlayerInput : MonoBehaviour
     private void BasicAttack()
     {
         Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
-        if (Physics.Raycast(ray, out var hit) && hit.collider.CompareTag("Floor"))
+        if (Physics.Raycast(ray, out var hit, Mathf.Infinity, floorLayerMask))
         {
             var gridTarget = new Vector2Int(
                 Mathf.RoundToInt(hit.point.x),

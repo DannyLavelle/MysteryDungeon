@@ -40,12 +40,13 @@ public class TurnManager : MonoBehaviour
 
     public IEnumerator EnemyTurn()
     {
-        // Find all active Enemy components in the scene
         Enemy[] enemies = GameObject.FindObjectsByType<Enemy>(FindObjectsSortMode.None);
-
         foreach (var e in enemies)
         {
+            if (e == null)
+                continue; 
             yield return e.TakeTurn();
         }
     }
+
 }

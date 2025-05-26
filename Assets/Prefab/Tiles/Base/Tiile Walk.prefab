@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1855307869985696042}
   - component: {fileID: 3798105706298186256}
   - component: {fileID: 2382721811238862701}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8365187193801378071}
   - component: {fileID: 3732909416575687613}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Tiile Walk
   m_TagString: Floor
   m_Icon: {fileID: 0}
