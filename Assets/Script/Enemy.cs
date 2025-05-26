@@ -7,7 +7,7 @@ public class Enemy : MonoBehaviour
 
     public GameObject target;
     public Stats stats;
-
+    public float delay;
     Dictionary<string, int> probabilities = new Dictionary<string, int>
         {
             { "Move", 20 },
@@ -20,33 +20,10 @@ public class Enemy : MonoBehaviour
         target = GameObject.FindGameObjectWithTag("Player");
         stats = GetComponent<Stats>();
     }
+
     public IEnumerator TakeTurn()
     {
-        if (target == null) yield break;
-
-        Vector2Int myPos = GridUtility.WorldToGridPosition(transform.position);
-        Vector2Int playerPos = GridUtility.WorldToGridPosition(target.transform.position);
-
-        List<Vector2Int> path = PathfindingUtility.GetPath(myPos, playerPos);
-
-        // Move one step toward the player (if possible)
-        if (path != null && path.Count > 0)
-        {
-            Vector2Int nextStep = path[0];
-
-            // <-- NEW: only move if nextStep is NOT the player's position
-            if (nextStep != playerPos)
-            {
-                yield return StepTo(nextStep);
-            }
-            else
-            {
-                // Optionally, you could attack here instead:
-                // yield return AttackPlayer();
-            }
-        }
-
-        yield return new WaitForSeconds(0.1f);
+        yield return MoveStep();
     }
 
     private void DecidePlan()//decides high level gameplan
@@ -87,6 +64,51 @@ public class Enemy : MonoBehaviour
         else
         {
             Debug.Log("Chasing player");
+        }
+    }
+
+
+    private IEnumerator MoveStep()
+    {
+        if (target == null) yield break;
+
+        Vector2Int myPos = GridUtility.WorldToGridPosition(transform.position);
+        Vector2Int playerPos = GridUtility.WorldToGridPosition(target.transform.position);
+
+        List<Vector2Int> path = PathfindingUtility.GetPath(myPos, playerPos);
+
+        if (path != null && path.Count > 0)
+        {
+            Vector2Int nextStep = path[0];
+
+            // 1) Don't step onto the player
+            if (nextStep == playerPos)
+            {
+                yield return new WaitForSeconds(delay);
+                yield break;
+            }
+
+            // 2) Don't step onto another enemy
+            Enemy[] allEnemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
+            foreach (var other in allEnemies)
+            {
+                if (other == this) continue;
+                Vector2Int otherPos = GridUtility.WorldToGridPosition(other.transform.position);
+                if (nextStep == otherPos)
+                {
+                    // blocked by another enemy
+                    yield return new WaitForSeconds(delay);
+                    yield break;
+                }
+            }
+
+            // 3) If all clear, move
+            yield return StepTo(nextStep);
+        }
+        else
+        {
+            // no path—just wait
+            yield return new WaitForSeconds(delay);
         }
     }
 
