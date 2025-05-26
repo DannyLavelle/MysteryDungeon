@@ -37,9 +37,7 @@ public class TurnManager : MonoBehaviour
         processing = false;
     }
 
-    /// <summary>
-    /// Called between each player tile?step: each enemy takes its turn in sequence.
-    /// </summary>
+
     public IEnumerator EnemyTurn()
     {
         // Find all active Enemy components in the scene
