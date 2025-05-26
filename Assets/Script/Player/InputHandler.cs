@@ -6,8 +6,8 @@ public class InputHandler : MonoBehaviour, Controls.IPlayerActions
 {
     public Vector2 MovementValue { get; private set; }
 
-    public event Action JumpEvent;
-    public event Action DodgeEvent;
+    public event Action<Vector2> MoveEvent;
+
     private Controls controls;
 
     private void Start()
@@ -22,55 +22,26 @@ public class InputHandler : MonoBehaviour, Controls.IPlayerActions
         controls.Player.Disable();
     }
 
-    public void OnJump(InputAction.CallbackContext context)
-    {
-        if (!context.performed) return;
-        JumpEvent?.Invoke();
-    }
+    //public void OnJump(InputAction.CallbackContext context)
+    //{
+    //    if (!context.performed) return;
+    //    JumpEvent?.Invoke();
+    //}
 
-    public void OnDodge(InputAction.CallbackContext context)
-    {
-        if (!context.performed) return;
-        DodgeEvent?.Invoke();
-    }
+    //public void OnDodge(InputAction.CallbackContext context)
+    //{
+    //    if (!context.performed) return;
+    //    DodgeEvent?.Invoke();
+    //}
 
-    public void OnMove(InputAction.CallbackContext context)
+    public void OnPosition(InputAction.CallbackContext context)
     {
         MovementValue = context.ReadValue<Vector2>();
     }
 
-    public void OnLook(InputAction.CallbackContext context)
+    public void OnMove(InputAction.CallbackContext context)
     {
-        throw new NotImplementedException();
-    }
-
-    public void OnAttack(InputAction.CallbackContext context)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void OnInteract(InputAction.CallbackContext context)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void OnCrouch(InputAction.CallbackContext context)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void OnPrevious(InputAction.CallbackContext context)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void OnNext(InputAction.CallbackContext context)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void OnSprint(InputAction.CallbackContext context)
-    {
-        throw new NotImplementedException();
+        if (!context.performed) return;
+        MoveEvent?.Invoke(MovementValue); // Pass movement value
     }
 }
