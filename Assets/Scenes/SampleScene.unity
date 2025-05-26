@@ -251,6 +251,7 @@ GameObject:
   - component: {fileID: 481434384}
   - component: {fileID: 481434383}
   - component: {fileID: 481434385}
+  - component: {fileID: 481434386}
   m_Layer: 0
   m_Name: Dungeon Generator
   m_TagString: Untagged
@@ -310,6 +311,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c261b12f3f20f344bb98d325eac45f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debug: 0
+--- !u!114 &481434386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 481434382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b42ba6b1c7ba1d41b2ef3e7eb16462a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemy: {fileID: 5807635887264416732, guid: 4cf9548419e7eeb4fa884ceea25d3619, type: 3}
+  player: {fileID: 0}
   debug: 0
 --- !u!1 &832575517
 GameObject:
@@ -414,6 +430,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 721567574693759763, guid: d65a87e363eda4041ab8515cef10ad94, type: 3}
   m_PrefabInstance: {fileID: 1521622666}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1357860404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1357860398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b533578176efce4994583cbc41d07fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1467323360
 GameObject:
   m_ObjectHideFlags: 0
@@ -531,7 +559,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: -0.5
   far clip plane: 1000
   field of view: 60
   orthographic: 1
@@ -642,6 +670,9 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1467323361}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4619996578354712834, guid: d65a87e363eda4041ab8515cef10ad94, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1357860404}
     - targetCorrespondingSourceObject: {fileID: 924367750734472570, guid: d65a87e363eda4041ab8515cef10ad94, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1725319613}

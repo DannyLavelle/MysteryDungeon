@@ -7,6 +7,7 @@ public class InputHandler : MonoBehaviour, Controls.IPlayerActions
     public Vector2 MovementValue { get; private set; }
 
     public event Action<Vector2> MoveEvent;
+    public event Action BasicAttackEvent;
 
     private Controls controls;
 
@@ -43,5 +44,11 @@ public class InputHandler : MonoBehaviour, Controls.IPlayerActions
     {
         if (!context.performed) return;
         MoveEvent?.Invoke(MovementValue); // Pass movement value
+    }
+
+    public void OnAttackBasic(InputAction.CallbackContext context)
+    {
+        if(!context.performed) return;
+        BasicAttackEvent.Invoke();
     }
 }
