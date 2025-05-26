@@ -112,6 +112,26 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private IEnumerator AttackPlayer()
+    {
+       if(CheckInRange(stats.attackRange))
+        {
+
+            EnemyAttackBase enemyAttack = GetComponent<EnemyAttackBase>();
+
+            Stats playerStats = target.GetComponent<Stats>();
+            
+            enemyAttack.Attack(playerStats,stats);
+            yield return new WaitForSeconds(delay);
+        }
+        else
+        {
+            yield return MoveStep();
+        }
+
+      
+    }
+
     private IEnumerator StepTo(Vector2Int position)
     {
         Vector3 targetPos = GridUtility.GridToWorldPosition(position);
@@ -127,6 +147,17 @@ public class Enemy : MonoBehaviour
         }
         
         transform.position = targetPos;
+    }
+
+    public bool CheckInRange(int range)
+    {
+        if (target == null) return false;
+
+        Vector2Int myPos = GridUtility.WorldToGridPosition(transform.position);
+        Vector2Int playerPos = GridUtility.WorldToGridPosition(target.transform.position);
+
+        int distance = PathfindingUtility.GetPathLength(myPos, playerPos);
+        return distance <= range;
     }
 
 }

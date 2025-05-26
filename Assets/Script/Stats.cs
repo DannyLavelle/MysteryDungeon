@@ -24,6 +24,7 @@ public class Stats : MonoBehaviour
     public int xpOnDeath = 1 ;
     public int xpIncrease;
     bool multiplyXP;
+    public int attackRange = 1;
     public Stats(int level = 0, int energy = 0, int maxHealth = 0, PersonalityType personality = PersonalityType.None, int damage = 0, int detectionRange = 0)
     {
         this.level = level;
