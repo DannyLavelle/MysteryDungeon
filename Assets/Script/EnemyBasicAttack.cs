@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class EnemyBasicAttack : EnemyAttackBase
+public class EnemyBasicAttack : MonoBehaviour,  IEnemyAttackBase
 {
 
 
-    public override void Attack(Stats playerStats,Stats enemyStats)
+    public  void Attack(Stats playerStats,Stats enemyStats)
     {
        playerStats.TakeDamage(enemyStats.damage);
         Debug.Log("Hit player");

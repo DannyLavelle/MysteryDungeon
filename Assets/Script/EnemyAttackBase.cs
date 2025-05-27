@@ -1,5 +1,4 @@
-public abstract class EnemyAttackBase
+public interface IEnemyAttackBase
 {
-    public abstract void Attack(Stats playerStats, Stats enemyStats);
-
+    void Attack(Stats playerStats, Stats enemyStats);
 }

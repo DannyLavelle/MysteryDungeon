@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour
     public GameObject target;
     public Stats stats;
     public float delay;
+    public bool debug;
     Dictionary<string, int> probabilities = new Dictionary<string, int>
         {
             { "Move", 20 },
@@ -23,7 +24,14 @@ public class Enemy : MonoBehaviour
 
     public IEnumerator TakeTurn()
     {
-        yield return MoveStep();
+        if(debug)
+        {
+            yield return AttackPlayer();
+        }
+        else
+        {
+            yield return MoveStep();
+        }
     }
 
     private void DecidePlan()//decides high level gameplan
@@ -117,11 +125,11 @@ public class Enemy : MonoBehaviour
        if(CheckInRange(stats.attackRange))
         {
 
-            EnemyAttackBase enemyAttack = GetComponent<EnemyAttackBase>();
+            IEnemyAttackBase enemyAttack = GetComponent<IEnemyAttackBase>();
 
             Stats playerStats = target.GetComponent<Stats>();
-            
-            enemyAttack.Attack(playerStats,stats);
+
+            enemyAttack.Attack(playerStats, stats);
             yield return new WaitForSeconds(delay);
         }
         else

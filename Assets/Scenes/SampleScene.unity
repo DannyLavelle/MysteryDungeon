@@ -442,6 +442,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b533578176efce4994583cbc41d07fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1357860407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1357860398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd84bb92acd66342bdd5a90e41f80ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level: 1
+  currentHealth: 20
+  energy: 50
+  maxHealth: 20
+  personality: 3
+  damage: 5
+  detectionRange: 3
+  allyThreshold: 0
+  armour: 0
+  maxArmour: 0
+  xp: 0
+  xpToNextLevel: 10
+  xpOnDeath: 0
+  xpIncrease: 1
+  attackRange: 0
 --- !u!1 &1467323360
 GameObject:
   m_ObjectHideFlags: 0
@@ -627,6 +654,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3977523040094323335, guid: d65a87e363eda4041ab8515cef10ad94, type: 3}
+      propertyPath: floorLayerMask.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 4619996578354712834, guid: d65a87e363eda4041ab8515cef10ad94, type: 3}
       propertyPath: m_Name
       value: Player
@@ -673,6 +704,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4619996578354712834, guid: d65a87e363eda4041ab8515cef10ad94, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1357860404}
+    - targetCorrespondingSourceObject: {fileID: 4619996578354712834, guid: d65a87e363eda4041ab8515cef10ad94, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1357860407}
     - targetCorrespondingSourceObject: {fileID: 924367750734472570, guid: d65a87e363eda4041ab8515cef10ad94, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1725319613}

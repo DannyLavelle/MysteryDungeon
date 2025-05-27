@@ -227,6 +227,7 @@ GameObject:
   - component: {fileID: 7429149194246227086}
   - component: {fileID: 9004713483239849431}
   - component: {fileID: 4537583953945621497}
+  - component: {fileID: 5018455087943040667}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -266,6 +267,7 @@ MonoBehaviour:
   target: {fileID: 0}
   stats: {fileID: 4537583953945621497}
   delay: 0
+  debug: 0
 --- !u!114 &4537583953945621497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -292,3 +294,16 @@ MonoBehaviour:
   xpToNextLevel: 0
   xpOnDeath: 1
   xpIncrease: 0
+  attackRange: 1
+--- !u!114 &5018455087943040667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5807635887264416732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 561381f57077b9c44bfd6567958251cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
