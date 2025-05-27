@@ -3,9 +3,10 @@ using UnityEngine;
 
 public class AttackAction : GameAction
 {
-    private PlayerController player;
-    private Vector2Int targetTile;
-    float damageMultiplier = 1;
+    public PlayerController player { get; private set; }
+     public Vector2Int targetTile {  get; private set; }
+    public float damageMultiplier = 1;
+    public int energyCost = 0;
     public AttackAction(PlayerController player, Vector2Int targetTile)
     {
         this.player = player;
@@ -17,15 +18,8 @@ public class AttackAction : GameAction
         Enemy enemy = GetEnemyAtPosition(targetTile);
         if (enemy != null)
         {
-            Debug.Log("Attacking enemy at " + targetTile);
-            Stats stats = enemy.GetComponent<Stats>();
-            Stats playerStats = player.GetComponent<Stats>();
-            if (stats != null)
-            {
-                //playerStats.damage
-                stats.TakeDamage(1); // Replace with real damage logic
-                Debug.Log("Enemy HP: " + stats.currentHealth);
-            }
+          AnimateAttack();
+          DamageEnemy(enemy);
         }
         else
         {
@@ -36,7 +30,7 @@ public class AttackAction : GameAction
 
     }
 
-    private Enemy GetEnemyAtPosition(Vector2Int pos)
+    public Enemy GetEnemyAtPosition(Vector2Int pos)
     {
         foreach (Enemy enemy in GameObject.FindObjectsByType<Enemy>(FindObjectsSortMode.None))
         {
@@ -46,4 +40,37 @@ public class AttackAction : GameAction
         }
         return null;
     }
+
+    public void DamageEnemy(Enemy enemy)
+    {
+        Debug.Log("Attacking enemy at " + targetTile);
+        Stats stats = enemy.GetComponent<Stats>();
+        Stats playerStats = player.GetComponent<Stats>();
+        if (stats != null)
+        {
+            //playerStats.damage
+            stats.TakeDamage(playerStats.damage * damageMultiplier); // Replace with real damage logic
+            Debug.Log("Enemy HP: " + stats.currentHealth);
+        }
+    }
+
+    void AnimateAttack()
+    {
+
+    }
+    public void TakeCost(int amount)
+    {
+        Stats playerStats = player.GetComponent<Stats>();
+        if(playerStats.energy < amount)//if player can't pay in energy they pay in health 
+        {
+            amount -= playerStats.energy;
+            playerStats.TakeDamage(amount);
+
+        }
+        else
+        {
+            playerStats.energy -= amount;
+        }
+    }
+
 }

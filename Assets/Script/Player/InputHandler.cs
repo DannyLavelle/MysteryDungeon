@@ -7,7 +7,8 @@ public class InputHandler : MonoBehaviour, Controls.IPlayerActions
     public Vector2 MovementValue { get; private set; }
 
     public event Action<Vector2> MoveEvent;
-    public event Action BasicAttackEvent;
+    public event Action<Vector2> BasicAttackEvent;
+    public event Action<int > AbilitySwitchEvent;
 
     private Controls controls;
 
@@ -49,6 +50,30 @@ public class InputHandler : MonoBehaviour, Controls.IPlayerActions
     public void OnAttackBasic(InputAction.CallbackContext context)
     {
         if(!context.performed) return;
-        BasicAttackEvent.Invoke();
+        BasicAttackEvent?.Invoke(MovementValue);
+    }
+
+    public void OnAbility1(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        AbilitySwitchEvent?.Invoke(1);
+    }
+
+    public void OnAbility2(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        AbilitySwitchEvent?.Invoke(2);
+    }
+
+    public void OnAbility3(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        AbilitySwitchEvent?.Invoke(3);
+    }
+
+    public void OnAbility4(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        AbilitySwitchEvent?.Invoke(4);
     }
 }

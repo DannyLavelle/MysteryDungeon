@@ -9,22 +9,34 @@ public enum PersonalityType
 }
 public class Stats : MonoBehaviour
 {
+    // Basic Attributes
+    public PersonalityType personality; // Personality type
     public int level = 1;
-    public float currentHealth = 20;
     public int energy = 50;
+
+    // Health & Defense
+    public float currentHealth = 20;
     public float maxHealth;
-    public PersonalityType personality;//personality type 
-    public int damage = 3;
-    public int detectionRange;
-    public int allyThreshold;
     public float armour;
     public float maxArmour = 75;
-    public float xp;
-    public float xpToNextLevel = 10 ;
-    public int xpOnDeath = 1 ;
-    public int xpIncrease;
-    bool multiplyXP;
+
+    // Combat
+    public float damage = 3;
     public int attackRange = 1;
+
+    // AI & Behavior
+    public int detectionRange;
+    public int allyThreshold;
+
+    // Experience & Leveling
+    public float xp;
+    public float xpToNextLevel = 10;
+    public int xpOnDeath = 1;
+    public int xpIncrease;
+    public bool multiplyXP;
+
+
+
     public Stats(int level = 0, int energy = 0, int maxHealth = 0, PersonalityType personality = PersonalityType.None, int damage = 0, int detectionRange = 0)
     {
         this.level = level;
@@ -43,7 +55,7 @@ public class Stats : MonoBehaviour
         
     }
     
-    public void TakeDamage(int amount)
+    public void TakeDamage(float amount)
     {
         currentHealth -= amount * ((100-armour) /100);
         if(currentHealth <= 0)
