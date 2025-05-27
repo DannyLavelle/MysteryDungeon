@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public abstract class Item : MonoBehaviour
+public interface IItem
 {
-    public int effectMagnitude;
-    public void Consume(Stats stas)
+    
+    public void Consume(Stats stats)
     {
 
     }

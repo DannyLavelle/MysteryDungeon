@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public GameObject enemy;
+    public GameObject[] toSpawn;
     public GameObject player;
     public bool debug;
 
@@ -20,7 +20,7 @@ public class EnemySpawner : MonoBehaviour
         {
             Vector2Int spawnPos = GetValidSpawnPosition();
             Transform spawnTransform = dungeonContainer.dungeonObjects[spawnPos.x, spawnPos.y].transform;
-            Instantiate(enemy, spawnTransform.position, Quaternion.identity);
+            Instantiate(toSpawn[Random.Range(0,toSpawn.Length)], spawnTransform.position, Quaternion.identity);//spawn random enemy
             debug = false;
         }
     }

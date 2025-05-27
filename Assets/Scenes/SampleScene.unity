@@ -454,21 +454,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edd84bb92acd66342bdd5a90e41f80ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level: 1
-  currentHealth: 20
-  energy: 50
-  maxHealth: 20
   personality: 3
-  damage: 5
-  detectionRange: 3
-  allyThreshold: 0
+  level: 1
+  energy: 50
+  currentHealth: 20
+  maxHealth: 20
   armour: 0
   maxArmour: 0
+  damage: 5
+  attackRange: 0
+  detectionRange: 3
+  allyThreshold: 0
+  intelligence: 0
   xp: 0
   xpToNextLevel: 10
-  xpOnDeath: 0
   xpIncrease: 1
-  attackRange: 0
+  xpOnDeath: 0
+  multiplyXP: 0
 --- !u!1 &1467323360
 GameObject:
   m_ObjectHideFlags: 0
@@ -564,8 +566,8 @@ Camera:
   m_GameObject: {fileID: 1467323360}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -586,7 +588,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: -0.5
+  near clip plane: -1.5
   far clip plane: 1000
   field of view: 60
   orthographic: 1

@@ -67,6 +67,16 @@ public class Stats : MonoBehaviour
             Die();
         }
     }
+
+    public void Heal (float amount)
+    {
+        currentHealth += amount;
+        if (currentHealth > maxHealth)
+        {
+            maxHealth = (currentHealth - maxHealth)/2;
+            currentHealth = maxHealth;
+        }
+    }
     public void Die()
     {
         if(personality == PersonalityType.Player)
