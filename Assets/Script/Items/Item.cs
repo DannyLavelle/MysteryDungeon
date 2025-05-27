@@ -2,9 +2,8 @@ using UnityEngine;
 
 public interface IItem
 {
-    
-    public void Consume(Stats stats)
-    {
-
-    }
+    string ItemName { get; }
+    int EffectAmount { get; }
+    public void Consume(Stats stats);
+  
 }
