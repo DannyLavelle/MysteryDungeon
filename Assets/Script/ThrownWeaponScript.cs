@@ -13,6 +13,8 @@ public class ThrownWeaponScript : MonoBehaviour
         weaponStats = GetComponent<Stats>();
          enemies = GameObject.FindObjectsByType<Enemy>(FindObjectsSortMode.None);
 
+        StartCoroutine(TravelAndCheck());
+
     }
     private IEnumerator TravelAndCheck()
     {
@@ -45,7 +47,7 @@ public class ThrownWeaponScript : MonoBehaviour
 
                    
                     //Destroy(gameObject);
-                    yield break;
+                    //yield break;
                 }
             }
 
@@ -60,6 +62,9 @@ public class ThrownWeaponScript : MonoBehaviour
         Destroy(gameObject);
     }
 
+    void CheckForEnemy()
+    {
 
+    }
 
 }
