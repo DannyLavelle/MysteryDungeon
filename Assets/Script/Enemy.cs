@@ -31,6 +31,7 @@ public class Enemy : MonoBehaviour
         else
         {
             yield return MoveStep();
+
         }
     }
 
@@ -155,6 +156,36 @@ public class Enemy : MonoBehaviour
         }
         
         transform.position = targetPos;
+        CheckForMine();
+    }
+
+    private void CheckForMine()
+    {
+        // 1) Get the enemy's current grid tile
+        Vector2Int myPos = GridUtility.WorldToGridPosition(transform.position);
+
+        // 2) Find all Mine instances in the scene
+        GameObject[] allMines = GameObject.FindGameObjectsWithTag("Mine");
+        foreach (var mine in allMines)
+        {
+            
+            Vector2Int minePos = GridUtility.WorldToGridPosition(mine.transform.position);
+
+            if (minePos == myPos)
+            {
+                
+                Stats myStats = GetComponent<Stats>();
+                Stats mineStats = mine.GetComponent<Stats>();
+                if (myStats != null)
+                    myStats.TakeDamage(mineStats.damage);
+
+               
+                Destroy(mine.gameObject);
+
+               
+                break;
+            }
+        }
     }
 
     public bool CheckInRange(int range)

@@ -4,8 +4,8 @@ using UnityEngine;
 public class MineAttackAction : AttackAction
 {
     // Assign this in code before using, or expose it another way
-    public  GameObject minePrefab = Resources.Load<GameObject>("Prefabs/Mine");
-
+    public  GameObject spawnPrefab = Resources.Load<GameObject>("Mine");
+    public string spawnMessage = "mine";
     public MineAttackAction(PlayerController player, Vector2Int targetTile)
         : base(player, targetTile)
     {
@@ -20,12 +20,12 @@ public class MineAttackAction : AttackAction
         Enemy enemy = GetEnemyAtPosition(targetTile);
         if (enemy != null)
         {
-            yield return base.Execute();
+
             yield break;
         }
 
         // 2) Otherwise, place a mine
-        if (minePrefab == null)
+        if (spawnPrefab == null)
         {
             Debug.LogError("MineAttackAction.minePrefab is not assigned!");
         }
@@ -33,7 +33,11 @@ public class MineAttackAction : AttackAction
         {
             Vector3 worldPos = GridUtility.GridToWorldPosition(targetTile);
             // Instantiate the mine at ground level; assumes the prefab has a trigger collider
-            Object.Instantiate(minePrefab, worldPos, Quaternion.identity);
+            GameObject mine = GameObject.Instantiate(spawnPrefab, worldPos, Quaternion.identity);
+            Stats mineStats = mine.GetComponent<Stats>();
+            Debug.Log($"Placing{spawnMessage}");
+            mineStats.damage = player.GetComponent<Stats>().damage * damageMultiplier;
+           
         }
 
         // 3) Spend energy / play animation if needed

@@ -9,30 +9,34 @@ public enum PersonalityType
 }
 public class Stats : MonoBehaviour
 {
-    // Basic Attributes
+    [Header("Base Attributes")]
     public PersonalityType personality; // Personality type
     public int level = 1;
     public int energy = 50;
 
-    // Health & Defense
+    [Header("Health and Defence")]
     public float currentHealth = 20;
     public float maxHealth;
     public float armour;
     public float maxArmour = 75;
 
-    // Combat
+    [Header("Combat")]
     public float damage = 3;
     public int attackRange = 1;
 
-    // AI & Behavior
+    [Header("AI & Behavior")]
     public int detectionRange;
     public int allyThreshold;
+   [Range(0,10)] public int intelligence;
 
-    // Experience & Leveling
+
+    [Header("Experience: Player")]
     public float xp;
     public float xpToNextLevel = 10;
-    public int xpOnDeath = 1;
     public int xpIncrease;
+
+    [Header("Experience: Enemy")]
+    public int xpOnDeath = 1;   
     public bool multiplyXP;
 
 

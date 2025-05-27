@@ -67,10 +67,10 @@ public class PlayerInput : MonoBehaviour
             action = new StrongAttackAction(player, gridTarget);
             break;
             case 3:
-                
+            action = new MineAttackAction(player, gridTarget);
             break;
             case 4:
-
+            action = new ThrowAttackAction(player, gridTarget);
             break;
             default:
             Debug.LogWarning("Didn't set ability or ability is not added");
