@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 public enum PersonalityType
 {
     None,
@@ -14,7 +16,7 @@ public class Stats : MonoBehaviour
     public PersonalityType personality; // Personality type
     public int level = 1;
     public int energy = 50;
-
+    int maxEnergy;
     [Header("Health and Defence")]
     public float currentHealth = 20;
     public float maxHealth;
@@ -43,6 +45,8 @@ public class Stats : MonoBehaviour
 
     public string currentAction;
     public Image healthBar;
+    public Image energyBar;
+    public TMP_Text levelText;
     public Stats(int level = 0, int energy = 0, int maxHealth = 0, PersonalityType personality = PersonalityType.None, int damage = 0, int detectionRange = 0)
     {
         this.level = level;
@@ -57,12 +61,17 @@ public class Stats : MonoBehaviour
 
     private void Start()
     {
+        maxEnergy = energy;
         currentHealth = maxHealth;
         IncreaseForFloor();
         UpdateHealthBar();
         
     }
-    
+    private void Update()
+    {
+       if(personality == PersonalityType.Player) UpdateEnergyBar();
+    }
+
     public void TakeDamage(float amount)
     {
         currentHealth -= amount * ((100-armour) /100);
@@ -89,7 +98,8 @@ public class Stats : MonoBehaviour
         maxHealth = 0;
         if(personality == PersonalityType.Player)
         {
-            
+            SaveHighScore(TurnManager.Instance.FLoorNumber);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
         else
         {
@@ -104,7 +114,11 @@ public class Stats : MonoBehaviour
         xp += amount;
         if(xp >= xpToNextLevel)
         {
-            //level up
+            level++;
+            maxHealth += 5;
+            damage += 1;
+            levelText.text = ("Level " + level);
+
             xp -= xpToNextLevel;
             xpToNextLevel = 0;
             IncreaseXP();
@@ -155,11 +169,34 @@ public class Stats : MonoBehaviour
 
         if (healthBar != null)
         {
-            Debug.Log(healthPercent + " : " + healthBar.fillAmount);
+           
             healthBar.fillAmount = healthPercent;
         }
-        
-
+ 
+    }
+    private void UpdateEnergyBar()
+    {
+        float e = energy;
+        float me = maxEnergy;
+        float Percent = e/me;
+        if (Percent > 1) Percent = 1;
+        if (energyBar != null)
+        {
+            Debug.Log("Energy: "+ energy + " max: " + maxEnergy + " percent: " + Percent);
+            energyBar.fillAmount = Percent;
+        }
 
     }
+
+    public void SaveHighScore(int currentScore)
+    {
+        int highScore = PlayerPrefs.GetInt("HighScore", 0); // Default to 0 if not set
+        if (currentScore > highScore)
+        {
+            PlayerPrefs.SetInt("HighScore", currentScore);
+            PlayerPrefs.Save(); // Write to disk
+            Debug.Log("New High Score: " + currentScore);
+        }
+    }
+    
 }

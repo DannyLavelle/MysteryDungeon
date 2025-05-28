@@ -1,11 +1,13 @@
 using UnityEngine;
-
+using UnityEngine.UI;
+using TMPro;
 
 public class Inventory : MonoBehaviour
 {
    public GameObject[] inventory = new GameObject[3];
     public bool debug;
     public int inventorycount;
+    public TMP_Text[] inventoryText = new TMP_Text[3];
     public bool pickup(GameObject item, GameObject itemObject)
     {
         if(item.CompareTag("Trap") || item.CompareTag("Stairs"))
@@ -21,7 +23,7 @@ public class Inventory : MonoBehaviour
             {
                 inventory[i] = item;
                 Debug.Log("Picked up item");
-                DisplayInventory();
+                DisplayInventory(i);
                 return true;
 
             }
@@ -41,7 +43,9 @@ public class Inventory : MonoBehaviour
             Debug.Log("Use Item: " + inventory[index]);
             Destroy(inventory[index]);
             inventory[index] = null;
-           
+            DisplayInventory(index);
+
+
 
         }
     }
@@ -52,6 +56,7 @@ public class Inventory : MonoBehaviour
         if (obj == null) return;
         obj.SetActive(true);
         if (toDestroy) Destroy(obj);
+       
     }
     private void Update()
     {
@@ -64,17 +69,20 @@ public class Inventory : MonoBehaviour
                ;
             }
             debug = false;
-            DisplayInventory();
+            //DisplayInventory();
 
         }
     }
-    public void DisplayInventory()
+    public void DisplayInventory(int index)
     {
-        inventorycount = 0;
-        for (int i = 0; i < inventory.Length; i++)
+        if( inventory[index] != null)
         {
-            if (inventory[i] != null) inventorycount += 1;
-            Debug.Log(inventory[i]);
+            inventoryText[index].text = inventory[index].name;
         }
+        else
+        {
+            inventoryText[index].text = "";
+        }
+          
     }
 }

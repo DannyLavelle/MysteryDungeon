@@ -1,13 +1,13 @@
 using UnityEngine.InputSystem;
 using UnityEngine;
 using System;
-
+using TMPro;
 public class PlayerInput : MonoBehaviour
 {
     private Camera cam;
     private PlayerController player;
     public LayerMask floorLayerMask;
-
+    public TMP_Text text;
     int ability;
     private void Start()
     {
@@ -20,6 +20,11 @@ public class PlayerInput : MonoBehaviour
         inputHandler.MoveEvent += CharacterMove;
         inputHandler.BasicAttackEvent += Attack;
         inputHandler.AbilitySwitchEvent += AbilitySwitch;
+        inputHandler.ItemSwitchEvent += ItemUse;
+
+
+        AbilitySwitch(1);
+
     }
 
 
@@ -85,6 +90,24 @@ public class PlayerInput : MonoBehaviour
     private void AbilitySwitch(int abilityID)
     {
         ability = abilityID;
+        string abilityName = "";
+        switch(abilityID)
+        {
+            case 1:
+            abilityName = "Weak Slash";
+            break;
+            case 2:
+            abilityName = "Strong Slash";
+            break;
+            case 3:
+            abilityName = "Place Mine";
+            break;
+            case 4:
+            abilityName = "Throw Weapon";
+            break;
+        }
+
+        text.text = ("Current Ability: " + abilityName);
     }
 
     private void CheckInRangeThenExecute(Func<int, int, bool> condition, int distance,int range, GameAction action)

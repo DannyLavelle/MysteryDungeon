@@ -21,15 +21,18 @@ public class ThrowAttackAction : AttackAction
         else
         {
             Vector3 worldPos = GridUtility.GridToWorldPosition(targetTile);
+            
             // Instantiate the mine at ground level; assumes the prefab has a trigger collider
-            GameObject thrownWeapon = GameObject.Instantiate(spawnPrefab, worldPos, Quaternion.identity);
+            GameObject thrownWeapon = GameObject.Instantiate(spawnPrefab, player.transform.position, Quaternion.identity);
             Stats thrownStats = thrownWeapon.GetComponent<Stats>();
             Debug.Log($"Placing throwing weapon");
             thrownStats.damage = player.GetComponent<Stats>().damage * damageMultiplier;
-
-            ThrownWeaponScript thrownWeaponScript = thrownWeapon.GetComponent<ThrownWeaponScript>();
             var playerpos = GridUtility.WorldToGridPosition(player.transform.position);
+            ThrownWeaponScript thrownWeaponScript = thrownWeapon.GetComponent<ThrownWeaponScript>();
+            
             thrownWeaponScript.Direction = GridUtility.Get8Direction(playerpos, targetTile);
+
+            base.TakeCost(energyCost);
 
 
         }

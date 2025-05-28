@@ -122,7 +122,7 @@ public class Enemy : MonoBehaviour
         {
            HandlePercentages(probabilities, "Move", 100f, isAbsolute: true, locks);
             locks["Move"] = true;
-            Debug.Log("Not in range");
+            //Debug.Log("Not in range");
 
             return;
         }//if not in detection just move about
@@ -612,6 +612,10 @@ public class Enemy : MonoBehaviour
         CheckForMine();
 
         yield return new WaitForSeconds(delay);
+    }
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
     }
 
 }
