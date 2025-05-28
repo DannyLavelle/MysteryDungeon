@@ -253,6 +253,7 @@ GameObject:
   - component: {fileID: 481434385}
   - component: {fileID: 481434386}
   - component: {fileID: 481434387}
+  - component: {fileID: 481434388}
   m_Layer: 0
   m_Name: Dungeon Generator
   m_TagString: Untagged
@@ -285,6 +286,8 @@ MonoBehaviour:
   dungeonBorder: 1
   straightCorridorChance: 0.5
   regenerateOnFlag: 0
+  enemySpawner: {fileID: 0}
+  itemSpawner: {fileID: 0}
 --- !u!4 &481434384
 Transform:
   m_ObjectHideFlags: 0
@@ -329,6 +332,7 @@ MonoBehaviour:
   - {fileID: 5807635887264416732, guid: 4cf9548419e7eeb4fa884ceea25d3619, type: 3}
   player: {fileID: 0}
   debug: 0
+  turnsToSpawn: 5
 --- !u!114 &481434387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -347,6 +351,24 @@ MonoBehaviour:
   - {fileID: 2925743415094070222, guid: 4a7df191fb527dc4ca471976674dd766, type: 3}
   player: {fileID: 1357860398}
   debug: 0
+  turnsToSpawn: 20
+--- !u!114 &481434388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 481434382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0691352783d2d474681b6357e0382046, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toSpawn:
+  - {fileID: 2925743415094070222, guid: 04bb33271de9e29439f71ec9dfb237a8, type: 3}
+  player: {fileID: 1357860398}
+  debug: 0
+  turnsToSpawn: -1
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -425,6 +447,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4552a3fe449449441bb1499caece3db3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemySpawner: {fileID: 481434386}
 --- !u!4 &1281553778
 Transform:
   m_ObjectHideFlags: 0

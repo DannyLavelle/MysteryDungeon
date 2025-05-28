@@ -56,6 +56,9 @@ public class EnemySpawner : MonoBehaviour
 
     public void IncreaseTurnCounter()
     {
+
+        if (turnsToSpawn == -1) return;
+
         turnCounter++;
         if(turnCounter >= turnsToSpawn)
         {
@@ -63,6 +66,14 @@ public class EnemySpawner : MonoBehaviour
             SpawnEnemy();
         }
            
+    }
+
+    public void BatchSpawn(int numberToSpawn)
+    {
+        for(int i = 0; i < numberToSpawn; i++)
+        {
+            SpawnEnemy();
+        }
     }
 
 }

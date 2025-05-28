@@ -27,6 +27,8 @@ public class DungeonGenerator : MonoBehaviour
     private DungeonSettings defaultSettings;
     public TileType[,] dungeonGrid;
 
+    public EnemySpawner enemySpawner;
+    public ItemSpawner itemSpawner;
 
 
     private void Start()
@@ -89,13 +91,12 @@ public class DungeonGenerator : MonoBehaviour
 
         dungeonGridContainer.dungeon = dungeonGrid;
 
-        // Spawn
+    
         DungeonUtility.SpawnTiles(dungeonGrid, floor, wall, dungeonContainer.transform,dungeonGridContainer);
 
 
 
-        ///Test Code
-        ///
+ 
         int rand = Random.Range(0, dungeonGridContainer.floorTiles.Count);
         int spawnPosX = dungeonGridContainer.floorTiles[rand].x;
         int spawnPosY = dungeonGridContainer.floorTiles[rand].y;
@@ -110,9 +111,8 @@ public class DungeonGenerator : MonoBehaviour
             playerController.dungeonGridContainer = dungeonGridContainer; // Optional, if needed
         }
 
-
-        ///
-        ///
+        itemSpawner.BatchSpawn(5);
+        enemySpawner.BatchSpawn(5);
     }
 
     private void DecideDungeonType()
@@ -140,7 +140,7 @@ public class DungeonGenerator : MonoBehaviour
             break;
         }
 
-        //Debug.Log($"Dungeon Type: {type}");
+        
     }
 
     private void ResetToDefaultSettings()
