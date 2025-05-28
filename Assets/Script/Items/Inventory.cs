@@ -8,7 +8,7 @@ public class Inventory : MonoBehaviour
     public int inventorycount;
     public bool pickup(GameObject item, GameObject itemObject)
     {
-        if(item.CompareTag("Trap"))
+        if(item.CompareTag("Trap") || item.CompareTag("Stairs"))
         {
             UseItem(item, false);
             Debug.Log("Using Trap");

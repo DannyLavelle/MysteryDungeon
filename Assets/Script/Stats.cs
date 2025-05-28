@@ -56,6 +56,7 @@ public class Stats : MonoBehaviour
     private void Start()
     {
         currentHealth = maxHealth;
+        IncreaseForFloor();
         
     }
     
@@ -123,6 +124,23 @@ public class Stats : MonoBehaviour
         {
             armour = maxArmour;
         }
+
+    }
+
+    public void IncreaseForFloor()
+    {
+        if (personality == PersonalityType.Player)return;
+            
+        int floor = TurnManager.Instance.FLoorNumber;
+
+        maxHealth = maxHealth + (5* floor);
+        currentHealth = maxHealth;
+
+        damage = damage + floor;
+
+        detectionRange += floor;
+
+        xpOnDeath += floor;
 
     }
 }

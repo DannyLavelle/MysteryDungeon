@@ -14,7 +14,7 @@ public class TurnManager : MonoBehaviour
     private Queue<GameAction> actionQueue = new Queue<GameAction>();
     private bool processing = false;
     public GameObject dungeonGeneration;
-    
+    public int FLoorNumber = 0;
     private void Awake()
     {
         if (Instance == null) Instance = this;

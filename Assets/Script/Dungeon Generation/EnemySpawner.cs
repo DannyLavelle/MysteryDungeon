@@ -15,6 +15,9 @@ public class EnemySpawner : MonoBehaviour
         dungeonContainer = FindAnyObjectByType<DungeonContainer>();
         if (dungeonContainer == null)
             Debug.LogError("No DungeonContainer found in scene!");
+
+
+
     }
 
     private void Update()
@@ -79,5 +82,7 @@ public class EnemySpawner : MonoBehaviour
         }
         if (turnsToSpawn == -1) spawnTurn = true;
     }
+
+ 
 
 }

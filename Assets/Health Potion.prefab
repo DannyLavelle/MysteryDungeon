@@ -114,9 +114,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7486480452093670356}
   - component: {fileID: 320206757493450124}
-  - component: {fileID: 6905641617677854555}
+  - component: {fileID: 4779137332851852212}
   m_Layer: 0
-  m_Name: Potion
+  m_Name: Health Potion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 0}
---- !u!114 &6905641617677854555
+--- !u!114 &4779137332851852212
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -163,5 +163,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20588e09547b0df42b3353d31c99d151, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  potionName: Potion
+  potionName: Health Potion
   effectAmount: 10

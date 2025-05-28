@@ -8,6 +8,7 @@ TagManager:
   - Wall
   - Mine
   - Trap
+  - Stairs
   layers:
   - Default
   - TransparentFX

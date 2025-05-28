@@ -30,7 +30,7 @@ public class DungeonGenerator : MonoBehaviour
     public EnemySpawner enemySpawner;
     public ItemSpawner itemSpawner;
     public TrapSpawner trapSpawner;
-
+    public StairsSpawner stairsSpawner;
     private void Start()
     {
         dungeonGridContainer = GetComponent<DungeonContainer>();
@@ -49,6 +49,7 @@ public class DungeonGenerator : MonoBehaviour
 
     public void GenerateDungeon()
     {
+        ResetEntities();
         roomCenters.Clear();
         roomBoundsList = new();
 
@@ -67,6 +68,7 @@ public class DungeonGenerator : MonoBehaviour
 
         dungeonGrid = dungeonGridContainer.CreateDungeonGrid(dungeonSizeX, dungeonSizeY);
         DungeonUtility.FillWithWalls(dungeonGrid);
+
 
         DecideDungeonType();
 
@@ -116,6 +118,8 @@ public class DungeonGenerator : MonoBehaviour
         enemySpawner.dungeonContainer = dungeonGridContainer;
         trapSpawner.dungeonContainer = dungeonGridContainer;
 
+
+        stairsSpawner.BatchSpawn(1);
         itemSpawner.BatchSpawn(5);
         enemySpawner.BatchSpawn(5);
         trapSpawner.BatchSpawn(5);
@@ -155,5 +159,23 @@ public class DungeonGenerator : MonoBehaviour
         minRoomY = defaultSettings.minRoomY;
         roomNumX = defaultSettings.roomNumX;
         roomNumY = defaultSettings.roomNumY;
+    }
+
+    private void ResetEntities()
+    {
+        ItemBase[] ib = FindObjectsByType<ItemBase>(FindObjectsSortMode.None);
+        foreach(ItemBase item in ib)
+        {
+            Destroy(item.gameObject);
+        }
+
+        Enemy[] enemy = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
+        foreach(Enemy item in enemy )
+        {
+            Destroy(item.gameObject);
+        }
+
+
+
     }
 }
