@@ -290,6 +290,7 @@ MonoBehaviour:
   enemySpawner: {fileID: 481434386}
   itemSpawner: {fileID: 481434387}
   trapSpawner: {fileID: 481434388}
+  stairsSpawner: {fileID: 481434389}
 --- !u!4 &481434384
 Transform:
   m_ObjectHideFlags: 0
@@ -389,7 +390,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eff703ad9e194a0499b627768b707755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toSpawn: []
+  toSpawn:
+  - {fileID: 2925743415094070222, guid: 3068851d08928624c82b5528719b45e5, type: 3}
   player: {fileID: 1357860398}
   debug: 0
   turnsToSpawn: -1
