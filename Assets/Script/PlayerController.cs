@@ -49,9 +49,9 @@ public class PlayerController : MonoBehaviour
             {
                 
                 Inventory inventory = GetComponent<Inventory>();
-                if(inventory.pickup(item.item, itemObject))
+                if(inventory.pickup(itemObject, itemObject))
                 {
-                    Destroy(itemObject);
+                    itemObject.SetActive(false);
                 }
 
                 

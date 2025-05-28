@@ -7,7 +7,7 @@ public class PotionScript : ItemBase
     [SerializeField] private int effectAmount = 10;
 
 
-    public  void Consume(Stats stats)
+    public override void Consume(Stats stats)
     {
         stats.Heal(effectAmount);
         Debug.Log($"Potion consumed: healed {effectAmount} HP");

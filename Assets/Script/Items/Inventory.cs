@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-   public ItemBase[] inventory = new ItemBase[3];
+   public GameObject[] inventory = new GameObject[3];
     public bool debug;
     public int inventorycount;
-    public bool pickup(ItemBase item, GameObject itemObject)
+    public bool pickup(GameObject item, GameObject itemObject)
     {
         for (int i = 0; i < inventory.Length; i++)
         {
@@ -27,7 +27,10 @@ public class Inventory : MonoBehaviour
     {
         if(inventory[index] != null)
         {
-            inventory[index].Consume(gameObject.GetComponent<Stats>());
+            inventory[index].SetActive(true);
+            ItemBase bs =inventory[index].GetComponent<ItemBase>();
+            Debug.Log(bs);
+            bs.Consume(gameObject.GetComponent<Stats>());
             Debug.Log("Use Item: " + inventory[index]);
             inventory[index] = null;
            
@@ -42,7 +45,7 @@ public class Inventory : MonoBehaviour
             for(int i = 0; i < inventory.Length; i++)
             {
                 UseItem(i); 
-                Debug.Log("Using item: "+ i);
+                Destroy(inventory[i]);
             }
             debug = false;
             DisplayInventory();

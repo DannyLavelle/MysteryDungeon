@@ -73,7 +73,7 @@ public class Stats : MonoBehaviour
         currentHealth += amount;
         if (currentHealth > maxHealth)
         {
-            maxHealth = (currentHealth - maxHealth)/2;
+            maxHealth += (currentHealth - maxHealth)/2;
             currentHealth = maxHealth;
             Debug.Log("Increasing Max Health");
         }

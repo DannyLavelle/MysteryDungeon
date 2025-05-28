@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public interface ItemBase 
+public abstract class ItemBase :MonoBehaviour
 {
 
     //[SerializeField] public string itemName = "Potion";
     //[SerializeField] public int effectAmount = 10;
 
 
-    public  void Consume(Stats stats);
+    public  abstract void Consume(Stats stats);
     
 }
