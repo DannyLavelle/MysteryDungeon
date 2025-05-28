@@ -52,12 +52,7 @@ public class PlayerController : MonoBehaviour
                 if(inventory.pickup(itemObject, itemObject))
                 {
                     itemObject.SetActive(false);
-                }
-
-                
-                
-
-                
+                }    
                 break;
             }
         }

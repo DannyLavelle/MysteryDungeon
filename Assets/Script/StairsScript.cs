@@ -1,9 +1,8 @@
 using UnityEngine;
 
-public class StairsScript : MonoBehaviour
+public class StairsScript : ItemBase
 {
-    public class TrapScript : ItemBase
-    {
+   
         [Header("Stair Settings")]
         [SerializeField] private string trapName = "Stairs";
         [SerializeField] private int effectAmount = 10;
@@ -16,9 +15,10 @@ public class StairsScript : MonoBehaviour
            if(dungeon != null)
             {
                 TurnManager.Instance.FLoorNumber++;
+                Debug.Log("Increased turn number");
                 dungeon.GenerateDungeon();
                 Destroy(gameObject);
             }
         }
-    }
+    
 }

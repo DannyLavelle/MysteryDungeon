@@ -49,6 +49,7 @@ public class Inventory : MonoBehaviour
     {
         ItemBase bs = obj.GetComponent<ItemBase>();
         bs.Consume(gameObject.GetComponent<Stats>());
+        if (obj == null) return;
         obj.SetActive(true);
         if (toDestroy) Destroy(obj);
     }
