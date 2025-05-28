@@ -40,15 +40,15 @@ public class Enemy : MonoBehaviour
 
        if(rand < probabilities["Move"])
         {
-
+            yield return RandomMoveStep();
         }
        else if (rand < (probabilities["Move"] + probabilities["Attack"]))
         {
-
+            yield return AttackPlayer();
         }
         else if (rand < (probabilities["Move"] + probabilities["Attack"] + probabilities["Retreat"]))
         {
-
+            yield return  RetreatStep();
         }
 
             if (debug)
@@ -59,6 +59,12 @@ public class Enemy : MonoBehaviour
         {
             yield return MoveStep();
 
+        }
+
+
+        foreach(KeyValuePair<string,bool> kvs in locks)//unlocks for next turn
+        {
+            locks[kvs.Key] = false;
         }
     }
 
@@ -432,7 +438,7 @@ public class Enemy : MonoBehaviour
         }
 
         // Avoid other enemies
-        foreach (var other in FindObjectsOfType<Enemy>())
+        foreach (var other in FindObjectsByType<Enemy>(FindObjectsSortMode.None))
         {
             if (other == this) continue;
             Vector2Int otherPos = GridUtility.WorldToGridPosition(other.transform.position);
@@ -444,6 +450,39 @@ public class Enemy : MonoBehaviour
         }
 
         // Step away
+        yield return StepTo(dest);
+    }
+
+    public IEnumerator RandomMoveStep()
+    {
+        if (dungeonContainer == null || dungeonContainer.floorTiles.Count == 0)
+            yield break;
+
+ 
+        var randomIndex = UnityEngine.Random.Range(0, dungeonContainer.floorTiles.Count);
+        Vector2Int dest = new Vector2Int(dungeonContainer.floorTiles[randomIndex].x, dungeonContainer.floorTiles[randomIndex].y);
+
+        
+        Vector2Int playerPos = GridUtility.WorldToGridPosition(target.transform.position);
+        if (dest == playerPos)
+        {
+            yield return new WaitForSeconds(delay);
+            yield break;
+        }
+
+       
+        foreach (var other in FindObjectsByType<Enemy>(FindObjectsSortMode.None))
+        {
+            if (other == this) continue;
+            Vector2Int otherPos = GridUtility.WorldToGridPosition(other.transform.position);
+            if (dest == otherPos)
+            {
+                yield return new WaitForSeconds(delay);
+                yield break;
+            }
+        }
+
+       
         yield return StepTo(dest);
     }
 }
