@@ -29,7 +29,7 @@ public class DungeonGenerator : MonoBehaviour
 
     public EnemySpawner enemySpawner;
     public ItemSpawner itemSpawner;
-
+    public TrapSpawner trapSpawner;
 
     private void Start()
     {
@@ -111,8 +111,14 @@ public class DungeonGenerator : MonoBehaviour
             playerController.dungeonGridContainer = dungeonGridContainer; // Optional, if needed
         }
 
+
+        itemSpawner.dungeonContainer = dungeonGridContainer;
+        enemySpawner.dungeonContainer = dungeonGridContainer;
+        trapSpawner.dungeonContainer = dungeonGridContainer;
+
         itemSpawner.BatchSpawn(5);
         enemySpawner.BatchSpawn(5);
+        trapSpawner.BatchSpawn(5);
     }
 
     private void DecideDungeonType()

@@ -7,12 +7,14 @@ public class EnemySpawner : MonoBehaviour
     public bool debug;
     private int turnCounter;
     public int turnsToSpawn;
-    DungeonContainer dungeonContainer;
-
+    public DungeonContainer dungeonContainer;
+    public bool spawnTurn;
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        dungeonContainer = GetComponent<DungeonContainer>();
+        dungeonContainer = FindAnyObjectByType<DungeonContainer>();
+        if (dungeonContainer == null)
+            Debug.LogError("No DungeonContainer found in scene!");
     }
 
     private void Update()
@@ -57,7 +59,7 @@ public class EnemySpawner : MonoBehaviour
     public void IncreaseTurnCounter()
     {
 
-        if (turnsToSpawn == -1) return;
+        if (spawnTurn) return;
 
         turnCounter++;
         if(turnCounter >= turnsToSpawn)
@@ -73,7 +75,9 @@ public class EnemySpawner : MonoBehaviour
         for(int i = 0; i < numberToSpawn; i++)
         {
             SpawnEnemy();
+
         }
+        if (turnsToSpawn == -1) spawnTurn = true;
     }
 
 }
