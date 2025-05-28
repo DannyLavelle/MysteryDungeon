@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,12 +10,21 @@ public class Enemy : MonoBehaviour
     public Stats stats;
     public float delay;
     public bool debug;
-    Dictionary<string, int> probabilities = new Dictionary<string, int>
+    private int closeAlly;
+    Dictionary<string, float> probabilities = new Dictionary<string, float>
         {
-            { "Move", 20 },
-            { "Attack", 30 },
-            { "Retreat", 50 }
+            { "Move", 20f },
+            { "Attack", 30f },
+            { "Retreat", 50f }
         };
+    Dictionary<string, bool> locks  = new Dictionary<string, bool>
+{
+    { "Move",    false },
+    { "Attack",  false },
+    { "Retreat", false  }  
+};
+
+    //private bool attackLock, moveLock, retreatLock;
 
     private void Start()
     {
@@ -24,7 +34,22 @@ public class Enemy : MonoBehaviour
 
     public IEnumerator TakeTurn()
     {
-        if(debug)
+        int rand = UnityEngine.Random.Range(0, 101);
+
+       if(rand < probabilities["Move"])
+        {
+
+        }
+       else if (rand < (probabilities["Move"] + probabilities["Attack"]))
+        {
+
+        }
+        else if (rand < (probabilities["Move"] + probabilities["Attack"] + probabilities["Retreat"]))
+        {
+
+        }
+
+            if (debug)
         {
             yield return AttackPlayer();
         }
@@ -46,6 +71,24 @@ public class Enemy : MonoBehaviour
         Vector2Int playerPos = GridUtility.WorldToGridPosition(target.transform.position);
 
         int distanceToPlayer = PathfindingUtility.GetPathLength(myPos, playerPos);
+        
+
+        if(distanceToPlayer > stats.detectionRange)
+        {
+           HandlePercentages(probabilities, "Move", 100f, isAbsolute: true, locks);
+            locks["Move"] = true;
+            Debug.Log("Not in range");
+
+            return;
+        }//if not in detection just move about
+
+        if(stats.intelligence ==0)
+        {
+            HandlePercentages(probabilities, "Attack", 100f, isAbsolute: true, locks);
+            locks["Attack"] = true;
+        }
+
+
 
         int closestEnemyDist = int.MaxValue;
         foreach (Enemy other in FindObjectsByType<Enemy>(FindObjectsSortMode.None))
@@ -54,7 +97,7 @@ public class Enemy : MonoBehaviour
 
             Vector2Int otherPos = GridUtility.WorldToGridPosition(other.transform.position);
             int dist = PathfindingUtility.GetPathLength(myPos, otherPos);
-            if (dist < closestEnemyDist) closestEnemyDist = dist;
+            if (dist < stats.allyThreshold) closestEnemyDist = dist;
         }
 
         Debug.Log($"Enemy: HP={stats.currentHealth}, DMG={stats.damage}, " +
@@ -79,6 +122,9 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator MoveStep()
     {
+
+
+
         if (target == null) yield break;
 
         Vector2Int myPos = GridUtility.WorldToGridPosition(transform.position);
@@ -141,6 +187,116 @@ public class Enemy : MonoBehaviour
       
     }
 
+
+
+    //public void handlePercentage(string type, float amount, int mult, bool lockProb)
+    //{
+    //    switch(type)
+    //    {
+    //        case "Move":
+    //        if (moveLock) return;
+    //        break;
+    //        case "Attack":
+    //        if (attackLock) return;
+    //        break;
+    //        case "Retreat":
+    //        if (retreatLock) return;
+    //        break;
+    //    }
+    //    if (probabilities[type] + amount < 0 || probabilities[type] + amount > 100) amount = probabilities[type];
+       
+
+    //    probabilities[type] += amount;
+    //    if(lockProb)
+    //    {
+    //        switch (type)
+    //        {
+    //            case "Move":
+    //            moveLock = true;
+    //            break;
+    //            case "Attack":
+    //            attackLock = true;
+    //            break;
+    //            case "Retreat":
+    //            retreatLock = true;
+    //            break;
+    //        }
+
+    //        lockNumber++;
+
+    //    }
+
+    //    float remainingCatagories = probabilities.Count - lockNumber;
+
+    //    float toAllocate = amount/remainingCatagories;
+
+    //    foreach(KeyValuePair<string, float> kvp in probabilities)
+    //    {
+    //        if (type == kvp.Key) continue;
+    //        if (CheckLock(kvp.Key)) continue;
+    //        probabilities[kvp.Key] += (toAllocate * mult *-1);
+
+    //    }
+
+        
+
+    //}
+
+    public static void HandlePercentages(
+    Dictionary<string, float> probs,
+    string key,
+    float amount,
+    bool isAbsolute,
+    Dictionary<string, bool> locks
+)
+    {
+        if (!probs.ContainsKey(key))
+            throw new ArgumentException($"Key '{key}' not found in probabilities.");
+
+       
+        if (locks.TryGetValue(key, out bool locked) && locked)
+            return;
+
+        float oldValue = probs[key];
+        float newValue = isAbsolute ? amount : oldValue + amount;
+        newValue = Mathf.Clamp(newValue, 0f, 100f);
+        probs[key] = newValue;
+
+
+        float sumLocked = 0f;
+        float sumUnlockedOthers = 0f;
+        foreach (var kv in probs)
+        {
+            if (kv.Key == key) continue;
+            if (locks.TryGetValue(kv.Key, out bool isLocked) && isLocked)
+                sumLocked += kv.Value;
+            else
+                sumUnlockedOthers += kv.Value;
+        }
+
+      
+        float remainder = 100f - newValue - sumLocked;
+
+
+        if (sumUnlockedOthers <= 0f)
+            return;
+
+       
+        foreach (var k in new List<string>(probs.Keys))
+        {
+            if (k == key)
+                continue;
+
+            if (locks.TryGetValue(k, out bool isLocked2) && isLocked2)
+                continue;
+
+            float oldOther = probs[k];
+            float share = oldOther / sumUnlockedOthers;
+            probs[k] = Mathf.Clamp(remainder * share, 0f, 100f);
+        }
+    }
+
+
     private IEnumerator StepTo(Vector2Int position)
     {
         Vector3 targetPos = GridUtility.GridToWorldPosition(position);
@@ -197,6 +353,23 @@ public class Enemy : MonoBehaviour
 
         int distance = PathfindingUtility.GetPathLength(myPos, playerPos);
         return distance <= range;
+    }
+
+    bool CheckLock(string type)
+    {
+        switch (type)
+        {
+            case "Move":
+            if (moveLock) return true;
+            break;
+            case "Attack":
+            if (attackLock) return true;
+            break;
+            case "Retreat":
+            if (retreatLock) return true;
+            break;
+        }
+        return false;
     }
 
 }
