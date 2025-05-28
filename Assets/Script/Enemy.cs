@@ -36,36 +36,58 @@ public class Enemy : MonoBehaviour
 
     public IEnumerator TakeTurn()
     {
-        int rand = UnityEngine.Random.Range(0, 100 + (100 -(10*stats.intelligence)));
+        int intDebuff = (40 - (4 * stats.intelligence));
+        int rand = UnityEngine.Random.Range(0, 100 + intDebuff);  // removed extra ')'
 
-       if(rand < probabilities["Move"])
+        float moveP = probabilities["Move"];
+        float attackP = probabilities["Attack"];
+        float retreatP = probabilities["Retreat"];
+        float sum = moveP + attackP + retreatP;
+
+        if (rand < moveP)
         {
             yield return RandomMoveStep();
+            stats.currentAction=("Rand Move");
         }
-       else if (rand < (probabilities["Move"] + probabilities["Attack"]))
+        else if (rand < moveP + attackP)
         {
             yield return AttackPlayer();
+            stats.currentAction = ("ATK");
         }
-        else if (rand < (probabilities["Move"] + probabilities["Attack"] + probabilities["Retreat"]))
+        else if (rand < sum)
         {
-            yield return  RetreatStep();
-        }
-
-            if (debug)
-        {
-            yield return AttackPlayer();
+            yield return RetreatStep();
+            stats.currentAction = ("Retreat");
         }
         else
         {
-            yield return MoveStep();
-
+          
+            int choice = UnityEngine.Random.Range(0, 3);
+            switch (choice)
+            {
+                case 0:
+                yield return RandomMoveStep();
+                stats.currentAction = ("Rand Move - rand action");
+                break;
+                case 1:
+                yield return AttackPlayer();
+                stats.currentAction = ("ATK - Rand action");
+                break;
+                default: // case 2
+                yield return RetreatStep();
+                stats.currentAction = ("Retreat - Rand action");
+                break;
+            }
         }
 
+        
+        if (debug)
+            yield return AttackPlayer();
 
-        foreach(KeyValuePair<string,bool> kvs in locks)//unlocks for next turn
-        {
-            locks[kvs.Key] = false;
-        }
+    
+        var keys = new List<string>(locks.Keys);
+        foreach (var k in keys)
+            locks[k] = false;
     }
 
     private void DecidePlan()//decides high level gameplan
@@ -143,7 +165,10 @@ public class Enemy : MonoBehaviour
             }
         }
 
-
+        if(distanceToPlayer == 1)//flat buff if in melee
+        {
+            HandlePercentages(probabilities, "Attack", 50, isAbsolute: false, locks);
+        }
 
         
     }
@@ -402,16 +427,72 @@ public class Enemy : MonoBehaviour
     //}
 
 
+    public IEnumerator RandomMoveStep()
+    {
+        // 1) Get my current grid pos
+        Vector2Int myPos = GridUtility.WorldToGridPosition(transform.position);
+
+        // 2) Build a list of all 8 neighbors
+        var neighbors = new List<Vector2Int>();
+        for (int dx = -1; dx <= 1; dx++)
+            for (int dy = -1; dy <= 1; dy++)
+            {
+                if (dx == 0 && dy == 0) continue;
+                neighbors.Add(new Vector2Int(myPos.x + dx, myPos.y + dy));
+            }
+
+        // 3) Shuffle the list
+        for (int i = 0; i < neighbors.Count; i++)
+        {
+            int j = UnityEngine.Random.Range(i, neighbors.Count);
+            var tmp = neighbors[i];
+            neighbors[i] = neighbors[j];
+            neighbors[j] = tmp;
+        }
+
+        // 4) Try each until a valid step is found
+        var grid = dungeonContainer.dungeon;
+        int w = grid.GetLength(0), h = grid.GetLength(1);
+        foreach (var dest in neighbors)
+        {
+            // Bounds & floor check
+            if (dest.x < 0 || dest.x >= w || dest.y < 0 || dest.y >= h) continue;
+            if (grid[dest.x, dest.y] == TileType.Wall) continue;
+
+            // Don’t step on player
+            var playerPos = GridUtility.WorldToGridPosition(target.transform.position);
+            if (dest == playerPos) continue;
+
+            // Don’t step on other enemies
+            bool occupied = false;
+            foreach (var other in FindObjectsByType<Enemy>(FindObjectsSortMode.None))
+            {
+                if (other == this) continue;
+                if (GridUtility.WorldToGridPosition(other.transform.position) == dest)
+                { occupied = true; break; }
+            }
+            if (occupied) continue;
+
+            // Valid! step there and return
+            yield return StepTo(dest);
+            yield break;
+        }
+
+        // nowhere to go
+        yield return new WaitForSeconds(delay);
+    }
+
+    /// <summary>
+    /// Steps exactly one tile directly away from the player (8?way).
+    /// </summary>
     public IEnumerator RetreatStep()
     {
-        if (target == null)
-            yield break;
+        if (target == null) { yield return new WaitForSeconds(delay); yield break; }
 
-        // Current grid positions
         Vector2Int myPos = GridUtility.WorldToGridPosition(transform.position);
         Vector2Int playerPos = GridUtility.WorldToGridPosition(target.transform.position);
 
-        // 8?way direction from player to me:
+        // Compute direction away from player in each axis
         int dx = myPos.x - playerPos.x;
         int dy = myPos.y - playerPos.y;
         Vector2Int dir = new Vector2Int(Mathf.Clamp(dx, -1, 1),
@@ -419,15 +500,14 @@ public class Enemy : MonoBehaviour
 
         if (dir == Vector2Int.zero)
         {
-            // On same tile? just wait
+            // On top of player? just wait
             yield return new WaitForSeconds(delay);
             yield break;
         }
 
         Vector2Int dest = myPos + dir;
 
-        // Check bounds and walkability
-        // (assumes dungeonContainer.dungeon is your TileType[,] grid)
+        // Bounds & walkability
         var grid = dungeonContainer.dungeon;
         int w = grid.GetLength(0), h = grid.GetLength(1);
         if (dest.x < 0 || dest.x >= w || dest.y < 0 || dest.y >= h
@@ -437,52 +517,18 @@ public class Enemy : MonoBehaviour
             yield break;
         }
 
-        // Avoid other enemies
+        // Occupied by other enemy?
         foreach (var other in FindObjectsByType<Enemy>(FindObjectsSortMode.None))
         {
             if (other == this) continue;
-            Vector2Int otherPos = GridUtility.WorldToGridPosition(other.transform.position);
-            if (dest == otherPos)
+            if (GridUtility.WorldToGridPosition(other.transform.position) == dest)
             {
                 yield return new WaitForSeconds(delay);
                 yield break;
             }
         }
 
-        // Step away
-        yield return StepTo(dest);
-    }
-
-    public IEnumerator RandomMoveStep()
-    {
-        if (dungeonContainer == null || dungeonContainer.floorTiles.Count == 0)
-            yield break;
-
- 
-        var randomIndex = UnityEngine.Random.Range(0, dungeonContainer.floorTiles.Count);
-        Vector2Int dest = new Vector2Int(dungeonContainer.floorTiles[randomIndex].x, dungeonContainer.floorTiles[randomIndex].y);
-
-        
-        Vector2Int playerPos = GridUtility.WorldToGridPosition(target.transform.position);
-        if (dest == playerPos)
-        {
-            yield return new WaitForSeconds(delay);
-            yield break;
-        }
-
-       
-        foreach (var other in FindObjectsByType<Enemy>(FindObjectsSortMode.None))
-        {
-            if (other == this) continue;
-            Vector2Int otherPos = GridUtility.WorldToGridPosition(other.transform.position);
-            if (dest == otherPos)
-            {
-                yield return new WaitForSeconds(delay);
-                yield break;
-            }
-        }
-
-       
+        // Finally, step away
         yield return StepTo(dest);
     }
 }

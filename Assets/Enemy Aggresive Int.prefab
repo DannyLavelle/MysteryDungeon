@@ -293,7 +293,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1512356792, guid: b40f732dc526c7d4aa2dbbcaaa354bc4, type: 3}
+  m_Sprite: {fileID: 2285029, guid: d42ad6e67f14b54479bdd32864124450, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -333,7 +333,7 @@ GameObject:
   - component: {fileID: 4537583953945621497}
   - component: {fileID: 5018455087943040667}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Enemy Aggresive Int
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -389,15 +389,15 @@ MonoBehaviour:
   level: 0
   energy: 0
   currentHealth: 0
-  maxHealth: 10
+  maxHealth: 40
   armour: 0
   maxArmour: 0
-  damage: 5
+  damage: 4
   attackRange: 1
-  detectionRange: 0
+  detectionRange: 4
   allyThreshold: 0
-  intelligence: 3
-  xp: 0
+  intelligence: 10
+  xp: 5
   xpToNextLevel: 0
   xpIncrease: 0
   xpOnDeath: 1

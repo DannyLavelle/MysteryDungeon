@@ -40,7 +40,7 @@ public class Stats : MonoBehaviour
     public bool multiplyXP;
 
 
-
+    public string currentAction;
     public Stats(int level = 0, int energy = 0, int maxHealth = 0, PersonalityType personality = PersonalityType.None, int damage = 0, int detectionRange = 0)
     {
         this.level = level;
