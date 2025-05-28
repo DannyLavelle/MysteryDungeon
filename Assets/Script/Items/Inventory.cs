@@ -8,6 +8,13 @@ public class Inventory : MonoBehaviour
     public int inventorycount;
     public bool pickup(GameObject item, GameObject itemObject)
     {
+        if(item.CompareTag("Trap"))
+        {
+            UseItem(item, false);
+            Debug.Log("Using Trap");
+            return false;
+        }
+
         for (int i = 0; i < inventory.Length; i++)
         {
             if (inventory[i] == null)
@@ -29,7 +36,7 @@ public class Inventory : MonoBehaviour
         {
             inventory[index].SetActive(true);
             ItemBase bs =inventory[index].GetComponent<ItemBase>();
-            Debug.Log(bs);
+            //Debug.Log(bs);
             bs.Consume(gameObject.GetComponent<Stats>());
             Debug.Log("Use Item: " + inventory[index]);
             Destroy(inventory[index]);
@@ -37,6 +44,13 @@ public class Inventory : MonoBehaviour
            
 
         }
+    }
+    public void UseItem(GameObject obj,bool toDestroy)
+    {
+        ItemBase bs = obj.GetComponent<ItemBase>();
+        bs.Consume(gameObject.GetComponent<Stats>());
+        obj.SetActive(true);
+        if (toDestroy) Destroy(obj);
     }
     private void Update()
     {

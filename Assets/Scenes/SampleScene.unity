@@ -344,6 +344,7 @@ MonoBehaviour:
   toSpawn:
   - {fileID: 2925743415094070222, guid: 3068851d08928624c82b5528719b45e5, type: 3}
   - {fileID: 2925743415094070222, guid: cdc9eee22fefa824397befff4d87e931, type: 3}
+  - {fileID: 2925743415094070222, guid: 4a7df191fb527dc4ca471976674dd766, type: 3}
   player: {fileID: 1357860398}
   debug: 0
 --- !u!1 &832575517
