@@ -5,7 +5,8 @@ public class EnemySpawner : MonoBehaviour
     public GameObject[] toSpawn;
     public GameObject player;
     public bool debug;
-
+    private int turnCounter;
+    public int turnsToSpawn;
     DungeonContainer dungeonContainer;
 
     private void Start()
@@ -18,9 +19,7 @@ public class EnemySpawner : MonoBehaviour
     {
         if (debug)
         {
-            Vector2Int spawnPos = GetValidSpawnPosition();
-            Transform spawnTransform = dungeonContainer.dungeonObjects[spawnPos.x, spawnPos.y].transform;
-            Instantiate(toSpawn[Random.Range(0,toSpawn.Length)], spawnTransform.position, Quaternion.identity);//spawn random enemy
+            SpawnEnemy();
             debug = false;
         }
     }
@@ -47,4 +46,23 @@ public class EnemySpawner : MonoBehaviour
 
         return spawnPos;
     }
+
+    private void SpawnEnemy()
+    {
+        Vector2Int spawnPos = GetValidSpawnPosition();
+        Transform spawnTransform = dungeonContainer.dungeonObjects[spawnPos.x, spawnPos.y].transform;
+        Instantiate(toSpawn[Random.Range(0, toSpawn.Length)], spawnTransform.position, Quaternion.identity);//spawn random enemy
+    }
+
+    public void IncreaseTurnCounter()
+    {
+        turnCounter++;
+        if(turnCounter >= turnsToSpawn)
+        {
+            turnCounter = 0;
+            SpawnEnemy();
+        }
+           
+    }
+
 }

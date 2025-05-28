@@ -44,8 +44,9 @@ public class ThrownWeaponScript : MonoBehaviour
                     Stats stats = e.GetComponent<Stats>();
                     if (stats != null)
                         stats.TakeDamage(weaponStats.damage);
+                    enemies = GameObject.FindObjectsByType<Enemy>(FindObjectsSortMode.None);//Recalcuate position after a hit to avoid atempted references
 
-                   
+
                     //Destroy(gameObject);
                     //yield break;
                 }
