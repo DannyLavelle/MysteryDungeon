@@ -252,6 +252,7 @@ GameObject:
   - component: {fileID: 481434383}
   - component: {fileID: 481434385}
   - component: {fileID: 481434386}
+  - component: {fileID: 481434387}
   m_Layer: 0
   m_Name: Dungeon Generator
   m_TagString: Untagged
@@ -324,8 +325,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b42ba6b1c7ba1d41b2ef3e7eb16462a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 5807635887264416732, guid: 4cf9548419e7eeb4fa884ceea25d3619, type: 3}
+  toSpawn:
+  - {fileID: 5807635887264416732, guid: 4cf9548419e7eeb4fa884ceea25d3619, type: 3}
   player: {fileID: 0}
+  debug: 0
+--- !u!114 &481434387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 481434382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a91668b5358db646beb8e7d4e1be4ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toSpawn:
+  - {fileID: 2925743415094070222, guid: 3068851d08928624c82b5528719b45e5, type: 3}
+  player: {fileID: 1357860398}
   debug: 0
 --- !u!1 &832575517
 GameObject:
@@ -471,6 +489,20 @@ MonoBehaviour:
   xpIncrease: 1
   xpOnDeath: 0
   multiplyXP: 0
+--- !u!114 &1357860410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1357860398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f12f870f2d2cf2479d3bcff1fb116eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debug: 0
+  inventorycount: 0
 --- !u!1 &1467323360
 GameObject:
   m_ObjectHideFlags: 0
@@ -709,6 +741,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4619996578354712834, guid: d65a87e363eda4041ab8515cef10ad94, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1357860407}
+    - targetCorrespondingSourceObject: {fileID: 4619996578354712834, guid: d65a87e363eda4041ab8515cef10ad94, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1357860410}
     - targetCorrespondingSourceObject: {fileID: 924367750734472570, guid: d65a87e363eda4041ab8515cef10ad94, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1725319613}

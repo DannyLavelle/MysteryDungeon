@@ -75,6 +75,7 @@ public class Stats : MonoBehaviour
         {
             maxHealth = (currentHealth - maxHealth)/2;
             currentHealth = maxHealth;
+            Debug.Log("Increasing Max Health");
         }
     }
     public void Die()

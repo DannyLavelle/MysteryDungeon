@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,6 +14,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        
         dungeonGridContainer = FindAnyObjectByType<DungeonContainer>();
     }
     public IEnumerator StepTo(Vector2Int target)
@@ -22,8 +26,40 @@ public class PlayerController : MonoBehaviour
         GridPosition = target;
         Vector3 worldPos = new Vector3(target.x, 0, target.y);
         transform.position = worldPos;
-
+        CheckForItemOnCurrentTile();
         yield return new WaitForSeconds(0.1f);
     }
+    private void CheckForItemOnCurrentTile()
+    {
+        // Get your current grid position
+        Vector2Int myPos = GridPosition;
 
+        // Find all MonoBehaviours that implement IItem
+        ItemReference[] itemList= FindObjectsByType<ItemReference>(FindObjectsSortMode.None)/*.OfType<IItem>().ToList()*/;
+
+
+
+        foreach (ItemReference item in itemList)
+        {
+            
+           GameObject itemObject = item.gameObject;
+            Vector2Int itemPos = GridUtility.WorldToGridPosition(itemObject.transform.position);
+
+            if (itemPos == myPos)
+            {
+                
+                Inventory inventory = GetComponent<Inventory>();
+                if(inventory.pickup(item.item, itemObject))
+                {
+                    Destroy(itemObject);
+                }
+
+                
+                
+
+                
+                break;
+            }
+        }
+    }
 }

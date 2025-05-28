@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 2143616542495509459}
   serializedVersion: 2
   m_LocalRotation: {x: 0.35355338, y: -0.35355338, z: 0.14644662, w: 0.8535534}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -113,7 +113,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7486480452093670356}
-  - component: {fileID: 2752692423800252575}
+  - component: {fileID: 320206757493450124}
   m_Layer: 0
   m_Name: Potion
   m_TagString: Untagged
@@ -137,7 +137,7 @@ Transform:
   - {fileID: 7793598845486018769}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2752692423800252575
+--- !u!114 &320206757493450124
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -146,7 +146,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 2925743415094070222}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20588e09547b0df42b3353d31c99d151, type: 3}
+  m_Script: {fileID: 11500000, guid: dcdba8555fc204d4ab3365775da7a2aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectAmount: 10

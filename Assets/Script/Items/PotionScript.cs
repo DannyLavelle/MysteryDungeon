@@ -1,18 +1,15 @@
 using UnityEngine;
 
-public class PotionScript : MonoBehaviour,IItem
+public class PotionScript : ItemBase
 {
-
-    [SerializeField] private string itemName = "Potion";
+    [Header("Potion Settings")]
+    [SerializeField] private string potionName = "Potion";
     [SerializeField] private int effectAmount = 10;
 
-    public string ItemName => itemName;
 
-    public int EffectAmount => effectAmount;
-
-    public void Consume(Stats stats)
+    public  void Consume(Stats stats)
     {
-        stats.Heal(EffectAmount);
+        stats.Heal(effectAmount);
+        Debug.Log($"Potion consumed: healed {effectAmount} HP");
     }
-
 }
