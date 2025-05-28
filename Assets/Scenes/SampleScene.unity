@@ -286,8 +286,9 @@ MonoBehaviour:
   dungeonBorder: 1
   straightCorridorChance: 0.5
   regenerateOnFlag: 0
-  enemySpawner: {fileID: 0}
-  itemSpawner: {fileID: 0}
+  enemySpawner: {fileID: 481434386}
+  itemSpawner: {fileID: 481434387}
+  trapSpawner: {fileID: 481434388}
 --- !u!4 &481434384
 Transform:
   m_ObjectHideFlags: 0
@@ -330,9 +331,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   toSpawn:
   - {fileID: 5807635887264416732, guid: 4cf9548419e7eeb4fa884ceea25d3619, type: 3}
-  player: {fileID: 0}
+  player: {fileID: 1357860398}
   debug: 0
   turnsToSpawn: 5
+  dungeonContainer: {fileID: 0}
+  spawnTurn: 0
 --- !u!114 &481434387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -352,6 +355,8 @@ MonoBehaviour:
   player: {fileID: 1357860398}
   debug: 0
   turnsToSpawn: 20
+  dungeonContainer: {fileID: 0}
+  spawnTurn: 0
 --- !u!114 &481434388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,6 +374,8 @@ MonoBehaviour:
   player: {fileID: 1357860398}
   debug: 0
   turnsToSpawn: -1
+  dungeonContainer: {fileID: 0}
+  spawnTurn: 0
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -447,7 +454,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4552a3fe449449441bb1499caece3db3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemySpawner: {fileID: 481434386}
+  dungeonGeneration: {fileID: 481434382}
 --- !u!4 &1281553778
 Transform:
   m_ObjectHideFlags: 0

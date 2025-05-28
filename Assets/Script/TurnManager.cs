@@ -13,7 +13,7 @@ public class TurnManager : MonoBehaviour
     public static TurnManager Instance { get; private set; }
     private Queue<GameAction> actionQueue = new Queue<GameAction>();
     private bool processing = false;
-   public EnemySpawner enemySpawner;
+    public GameObject dungeonGeneration;
     
     private void Awake()
     {
@@ -45,7 +45,13 @@ public class TurnManager : MonoBehaviour
 
     public IEnumerator EnemyTurn()
     {
-        enemySpawner.IncreaseTurnCounter();
+        EnemySpawner[] es = dungeonGeneration.GetComponents<EnemySpawner>();
+        foreach(var enemy in es)
+        {
+            enemy.IncreaseTurnCounter();
+        }
+
+
         Enemy[] enemies = GameObject.FindObjectsByType<Enemy>(FindObjectsSortMode.None);
         foreach (var e in enemies)
         {
