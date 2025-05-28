@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
     public float delay;
     public bool debug;
     private int closeAlly;
+    DungeonContainer dungeonContainer;
     Dictionary<string, float> probabilities = new Dictionary<string, float>
         {
             { "Move", 20f },
@@ -30,11 +31,12 @@ public class Enemy : MonoBehaviour
     {
         target = GameObject.FindGameObjectWithTag("Player");
         stats = GetComponent<Stats>();
+        dungeonContainer = FindFirstObjectByType<DungeonContainer>();
     }
 
     public IEnumerator TakeTurn()
     {
-        int rand = UnityEngine.Random.Range(0, 101);
+        int rand = UnityEngine.Random.Range(0, 100 + (100 -(10*stats.intelligence)));
 
        if(rand < probabilities["Move"])
         {
@@ -90,33 +92,54 @@ public class Enemy : MonoBehaviour
 
 
 
-        int closestEnemyDist = int.MaxValue;
+        //int closestEnemyDist = int.MaxValue;
         foreach (Enemy other in FindObjectsByType<Enemy>(FindObjectsSortMode.None))
         {
             if (other == this) continue;
 
             Vector2Int otherPos = GridUtility.WorldToGridPosition(other.transform.position);
             int dist = PathfindingUtility.GetPathLength(myPos, otherPos);
-            if (dist < stats.allyThreshold) closestEnemyDist = dist;
+            if (dist < stats.allyThreshold) closeAlly ++;
         }
 
-        Debug.Log($"Enemy: HP={stats.currentHealth}, DMG={stats.damage}, " +
-                  $"DistToPlayer={distanceToPlayer}, PlayerHP={playerStats.currentHealth}, " +
-                  $"DistToEnemy={closestEnemyDist}");
+        switch(stats.personality)
+        {
+            case PersonalityType.Shy:
+            HandlePercentages(probabilities, "Attack", -5*closeAlly, isAbsolute: false, locks);
+            break;
+            case PersonalityType.Aggressive:
+            HandlePercentages(probabilities, "Attack", 10 * closeAlly, isAbsolute: false, locks);
+            break;
+        }//emboldens based on personality type and number of close allies
 
-        // Example decision logic
-        if (stats.currentHealth < 10)
+     
+        if (stats.currentHealth < 5)//retreat if low health
         {
-            Debug.Log("Retreating due to low health");
+            if (stats.personality == PersonalityType.Shy)
+            {
+                HandlePercentages(probabilities, "Retreat", 80 , isAbsolute: false, locks);
+            }
+            else
+            {
+                HandlePercentages(probabilities, "Retreat", -20 , isAbsolute: false, locks);
+            }
         }
-        else if (distanceToPlayer <= 1)
+
+        if (playerStats.currentHealth < stats.damage)//Embolden if can kill
         {
-            Debug.Log("Attacking player!");
+            if (stats.personality == PersonalityType.Shy)
+            {
+                HandlePercentages(probabilities, "Attack", 50, isAbsolute: false, locks);
+            }
+            else
+            {
+                HandlePercentages(probabilities, "Attack", 80, isAbsolute: false, locks);
+            }
         }
-        else
-        {
-            Debug.Log("Chasing player");
-        }
+
+
+
+        
     }
 
 
@@ -355,21 +378,72 @@ public class Enemy : MonoBehaviour
         return distance <= range;
     }
 
-    bool CheckLock(string type)
-    {
-        switch (type)
-        {
-            case "Move":
-            if (moveLock) return true;
-            break;
-            case "Attack":
-            if (attackLock) return true;
-            break;
-            case "Retreat":
-            if (retreatLock) return true;
-            break;
-        }
-        return false;
-    }
+    //bool CheckLock(string type)
+    //{
+    //    switch (type)
+    //    {
+    //        case "Move":
+    //        if (moveLock) return true;
+    //        break;
+    //        case "Attack":
+    //        if (attackLock) return true;
+    //        break;
+    //        case "Retreat":
+    //        if (retreatLock) return true;
+    //        break;
+    //    }
+    //    return false;
+    //}
 
+
+    public IEnumerator RetreatStep()
+    {
+        if (target == null)
+            yield break;
+
+        // Current grid positions
+        Vector2Int myPos = GridUtility.WorldToGridPosition(transform.position);
+        Vector2Int playerPos = GridUtility.WorldToGridPosition(target.transform.position);
+
+        // 8?way direction from player to me:
+        int dx = myPos.x - playerPos.x;
+        int dy = myPos.y - playerPos.y;
+        Vector2Int dir = new Vector2Int(Mathf.Clamp(dx, -1, 1),
+                                        Mathf.Clamp(dy, -1, 1));
+
+        if (dir == Vector2Int.zero)
+        {
+            // On same tile? just wait
+            yield return new WaitForSeconds(delay);
+            yield break;
+        }
+
+        Vector2Int dest = myPos + dir;
+
+        // Check bounds and walkability
+        // (assumes dungeonContainer.dungeon is your TileType[,] grid)
+        var grid = dungeonContainer.dungeon;
+        int w = grid.GetLength(0), h = grid.GetLength(1);
+        if (dest.x < 0 || dest.x >= w || dest.y < 0 || dest.y >= h
+            || grid[dest.x, dest.y] == TileType.Wall)
+        {
+            yield return new WaitForSeconds(delay);
+            yield break;
+        }
+
+        // Avoid other enemies
+        foreach (var other in FindObjectsOfType<Enemy>())
+        {
+            if (other == this) continue;
+            Vector2Int otherPos = GridUtility.WorldToGridPosition(other.transform.position);
+            if (dest == otherPos)
+            {
+                yield return new WaitForSeconds(delay);
+                yield break;
+            }
+        }
+
+        // Step away
+        yield return StepTo(dest);
+    }
 }
