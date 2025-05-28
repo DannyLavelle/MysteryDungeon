@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 public enum PersonalityType
 {
     None,
@@ -41,6 +42,7 @@ public class Stats : MonoBehaviour
 
 
     public string currentAction;
+    public HealthBar healthBar;
     public Stats(int level = 0, int energy = 0, int maxHealth = 0, PersonalityType personality = PersonalityType.None, int damage = 0, int detectionRange = 0)
     {
         this.level = level;
@@ -57,6 +59,7 @@ public class Stats : MonoBehaviour
     {
         currentHealth = maxHealth;
         IncreaseForFloor();
+        UpdateHealthBar();
         
     }
     
@@ -71,6 +74,7 @@ public class Stats : MonoBehaviour
 
     public void Heal (float amount)
     {
+
         currentHealth += amount;
         if (currentHealth > maxHealth)
         {
@@ -81,6 +85,7 @@ public class Stats : MonoBehaviour
     }
     public void Die()
     {
+        maxHealth = 0;
         if(personality == PersonalityType.Player)
         {
             
@@ -142,5 +147,11 @@ public class Stats : MonoBehaviour
 
         xpOnDeath += floor;
 
+    }
+    private void UpdateHealthBar()
+    {
+        float healthPercent = currentHealth / maxHealth;
+        healthBar.fillAmount = healthPercent;
+        
     }
 }

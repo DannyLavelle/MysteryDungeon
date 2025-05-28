@@ -36,6 +36,21 @@ public class Enemy : MonoBehaviour
 
     public IEnumerator TakeTurn()
     {
+
+        Vector2Int myPos = GridUtility.WorldToGridPosition(transform.position);
+        Vector2Int playerPos = GridUtility.WorldToGridPosition(target.transform.position);
+
+        int distanceToPlayer = PathfindingUtility.GetPathLength(myPos, playerPos);
+
+
+        if (distanceToPlayer > stats.detectionRange)
+        {
+          
+
+            yield return RandomMoveFarStep();
+        }//if not in detection just move about
+
+        DecidePlan();
         int intDebuff = (40 - (4 * stats.intelligence));
         int rand = UnityEngine.Random.Range(0, 100 + intDebuff);  // removed extra ')'
 
@@ -482,6 +497,63 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(delay);
     }
 
+
+    public IEnumerator RandomMoveFarStep()
+    {
+        // 1) Get my current grid pos
+        Vector2Int myPos = GridUtility.WorldToGridPosition(transform.position);
+
+        // 2) Build a list of all 8 neighbors
+        var neighbors = new List<Vector2Int>();
+        for (int dx = -1; dx <= 1; dx++)
+            for (int dy = -1; dy <= 1; dy++)
+            {
+                if (dx == 0 && dy == 0) continue;
+                neighbors.Add(new Vector2Int(myPos.x + dx, myPos.y + dy));
+            }
+
+        // 3) Shuffle the list
+        for (int i = 0; i < neighbors.Count; i++)
+        {
+            int j = UnityEngine.Random.Range(i, neighbors.Count);
+            var tmp = neighbors[i];
+            neighbors[i] = neighbors[j];
+            neighbors[j] = tmp;
+        }
+
+        // 4) Try each until a valid step is found
+        var grid = dungeonContainer.dungeon;
+        int w = grid.GetLength(0), h = grid.GetLength(1);
+        foreach (var dest in neighbors)
+        {
+            // Bounds & floor check
+            if (dest.x < 0 || dest.x >= w || dest.y < 0 || dest.y >= h) continue;
+            if (grid[dest.x, dest.y] == TileType.Wall) continue;
+
+            // Don’t step on player
+            var playerPos = GridUtility.WorldToGridPosition(target.transform.position);
+            if (dest == playerPos) continue;
+
+            // Don’t step on other enemies
+            bool occupied = false;
+            foreach (var other in FindObjectsByType<Enemy>(FindObjectsSortMode.None))
+            {
+                if (other == this) continue;
+                if (GridUtility.WorldToGridPosition(other.transform.position) == dest)
+                { occupied = true; break; }
+            }
+            if (occupied) continue;
+
+            // Valid! step there and return
+            yield return InstantStepTo(dest);
+            yield break;
+        }
+
+        // nowhere to go
+        yield return new WaitForSeconds(delay);
+    }
+
+
     /// <summary>
     /// Steps exactly one tile directly away from the player (8?way).
     /// </summary>
@@ -531,4 +603,15 @@ public class Enemy : MonoBehaviour
         // Finally, step away
         yield return StepTo(dest);
     }
+
+
+    private IEnumerator InstantStepTo(Vector2Int gridPos)
+    {
+        Vector3 worldPos = GridUtility.GridToWorldPosition(gridPos);
+        transform.position = worldPos;
+        CheckForMine();
+
+        yield return new WaitForSeconds(delay);
+    }
+
 }

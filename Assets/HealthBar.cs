@@ -1,16 +1,14 @@
 using UnityEngine;
-
+using UnityEngine.UI;
 public class HealthBar : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public Image fill;
+    public float changeSpeed;
 
-    // Update is called once per frame
-    void Update()
+    public float fillAmount;
+
+    private void Update()
     {
-        
+        fill.fillAmount = Mathf.Lerp(fill.fillAmount,fillAmount,changeSpeed + Time.deltaTime);
     }
 }
