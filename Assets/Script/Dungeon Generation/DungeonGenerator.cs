@@ -163,15 +163,18 @@ public class DungeonGenerator : MonoBehaviour
 
     private void ResetEntities()
     {
+        Inventory inv = GetComponent<Inventory>();
         ItemBase[] ib = FindObjectsByType<ItemBase>(FindObjectsSortMode.None);
         foreach(ItemBase item in ib)
         {
-            Destroy(item.gameObject);
+            if (item.isActiveAndEnabled) Destroy(item.gameObject);
+
         }
 
         Enemy[] enemy = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
         foreach(Enemy item in enemy )
         {
+            
             Destroy(item.gameObject);
         }
 

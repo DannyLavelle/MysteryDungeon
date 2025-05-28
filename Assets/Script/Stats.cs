@@ -42,7 +42,7 @@ public class Stats : MonoBehaviour
 
 
     public string currentAction;
-    public HealthBar healthBar;
+    public Image healthBar;
     public Stats(int level = 0, int energy = 0, int maxHealth = 0, PersonalityType personality = PersonalityType.None, int damage = 0, int detectionRange = 0)
     {
         this.level = level;
@@ -66,6 +66,7 @@ public class Stats : MonoBehaviour
     public void TakeDamage(float amount)
     {
         currentHealth -= amount * ((100-armour) /100);
+        UpdateHealthBar();
         if(currentHealth <= 0)
         {
             Die();
@@ -151,7 +152,14 @@ public class Stats : MonoBehaviour
     private void UpdateHealthBar()
     {
         float healthPercent = currentHealth / maxHealth;
-        healthBar.fillAmount = healthPercent;
+
+        if (healthBar != null)
+        {
+            Debug.Log(healthPercent + " : " + healthBar.fillAmount);
+            healthBar.fillAmount = healthPercent;
+        }
         
+
+
     }
 }

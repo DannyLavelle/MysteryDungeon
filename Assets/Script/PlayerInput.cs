@@ -99,6 +99,12 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    private void ItemUse(int index)
+    {
+        Inventory inv = GetComponent<Inventory>();
+        inv.UseItem(index);
+    }
+
 
 
 }

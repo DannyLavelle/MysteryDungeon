@@ -9,6 +9,7 @@ public class InputHandler : MonoBehaviour, Controls.IPlayerActions
     public event Action<Vector2> MoveEvent;
     public event Action<Vector2> BasicAttackEvent;
     public event Action<int > AbilitySwitchEvent;
+    public event Action<int> ItemSwitchEvent;
 
     private Controls controls;
 
@@ -75,5 +76,23 @@ public class InputHandler : MonoBehaviour, Controls.IPlayerActions
     {
         if (!context.performed) return;
         AbilitySwitchEvent?.Invoke(4);
+    }
+
+    public void OnItem1(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        ItemSwitchEvent?.Invoke(1);
+    }
+
+    public void OnItem2(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        ItemSwitchEvent?.Invoke(2);
+    }
+
+    public void OnItem3(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        ItemSwitchEvent?.Invoke(3);
     }
 }
