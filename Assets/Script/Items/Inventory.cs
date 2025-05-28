@@ -32,6 +32,7 @@ public class Inventory : MonoBehaviour
             Debug.Log(bs);
             bs.Consume(gameObject.GetComponent<Stats>());
             Debug.Log("Use Item: " + inventory[index]);
+            Destroy(inventory[index]);
             inventory[index] = null;
            
 
@@ -45,7 +46,7 @@ public class Inventory : MonoBehaviour
             for(int i = 0; i < inventory.Length; i++)
             {
                 UseItem(i); 
-                Destroy(inventory[i]);
+               ;
             }
             debug = false;
             DisplayInventory();

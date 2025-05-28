@@ -343,6 +343,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   toSpawn:
   - {fileID: 2925743415094070222, guid: 3068851d08928624c82b5528719b45e5, type: 3}
+  - {fileID: 2925743415094070222, guid: cdc9eee22fefa824397befff4d87e931, type: 3}
   player: {fileID: 1357860398}
   debug: 0
 --- !u!1 &832575517
@@ -501,6 +502,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f12f870f2d2cf2479d3bcff1fb116eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventory:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   debug: 0
   inventorycount: 0
 --- !u!1 &1467323360

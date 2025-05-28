@@ -3,7 +3,7 @@ using UnityEngine;
 public class PotionScript : ItemBase
 {
     [Header("Potion Settings")]
-    [SerializeField] private string potionName = "Potion";
+    [SerializeField] private string potionName = "Health Potion";
     [SerializeField] private int effectAmount = 10;
 
 

@@ -115,4 +115,14 @@ public class Stats : MonoBehaviour
             xpToNextLevel += xpIncrease;
         }
     }
+
+    public void AddArmour(int amount)
+    {
+        armour += amount;
+        if(armour >= maxArmour)
+        {
+            armour = maxArmour;
+        }
+
+    }
 }
