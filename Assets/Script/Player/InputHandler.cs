@@ -81,18 +81,18 @@ public class InputHandler : MonoBehaviour, Controls.IPlayerActions
     public void OnItem1(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
-        ItemSwitchEvent?.Invoke(1);
+        ItemSwitchEvent?.Invoke(0);
     }
 
     public void OnItem2(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
-        ItemSwitchEvent?.Invoke(2);
+        ItemSwitchEvent?.Invoke(1);
     }
 
     public void OnItem3(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
-        ItemSwitchEvent?.Invoke(3);
+        ItemSwitchEvent?.Invoke(2);
     }
 }
