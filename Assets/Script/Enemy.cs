@@ -44,15 +44,13 @@ public class Enemy : MonoBehaviour
 
 
         if (distanceToPlayer > stats.detectionRange)
-        {
-          
-
+        {        
             yield return RandomMoveFarStep();
         }//if not in detection just move about
 
         DecidePlan();
         int intDebuff = (40 - (4 * stats.intelligence));
-        int rand = UnityEngine.Random.Range(0, 100 + intDebuff);  // removed extra ')'
+        int rand = UnityEngine.Random.Range(0, 100 + intDebuff);  
 
         float moveP = probabilities["Move"];
         float attackP = probabilities["Attack"];
