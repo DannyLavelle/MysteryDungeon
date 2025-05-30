@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
         Vector3 worldPos = new Vector3(target.x, 0, target.y);
         transform.position = worldPos;
         CheckForItemOnCurrentTile();
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.05f);
     }
     private void CheckForItemOnCurrentTile()
     {

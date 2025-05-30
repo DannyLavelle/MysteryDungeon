@@ -60,11 +60,9 @@ public class MoveAction : GameAction
 
     public override IEnumerator Execute()
     {
-        // 1) Compute the path: ONLY the destination steps (no start tile)
+        
         var path = PathfindingUtility.GetPath(player.GridPosition, destination);
-        //Debug.Log($"[MoveAction] Path length from {player.GridPosition} to {destination} = {path.Count}");
 
-        // 2) Iterate every step in that path
         foreach (var step in path)
         {
             if (!IsWalkable(step))
