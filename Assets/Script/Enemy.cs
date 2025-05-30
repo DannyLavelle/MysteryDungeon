@@ -148,7 +148,7 @@ public class Enemy : MonoBehaviour
         switch(stats.personality)
         {
             case PersonalityType.Shy:
-            HandlePercentages(probabilities, "Attack", -5*closeAlly, isAbsolute: false, locks);
+            HandlePercentages(probabilities, "Attack", -50/closeAlly, isAbsolute: false, locks);
             break;
             case PersonalityType.Aggressive:
             HandlePercentages(probabilities, "Attack", 10 * closeAlly, isAbsolute: false, locks);
